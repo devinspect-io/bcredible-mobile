@@ -2,25 +2,65 @@ import 'package:flutter/material.dart';
 import '../blocs/login_bloc.dart';
 import 'package:toast/toast.dart';
 import './list_view.dart';
+import './signup_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   Widget build(context) {
     final bloc = Provider.of(context);
     return Container(
-      margin: EdgeInsets.all(20.0),
-      child: Column(
-        children: <Widget>[
-          _addTopMargin(20),
-          textLabel(),
-          _addTopMargin(20),
-          emailFied(bloc),
-          _addTopMargin(20),
-          passwordField(bloc),
-          Container(margin: EdgeInsets.only(top: 25.0)),
-          submitButton(bloc)
-        ],
-      ),
-    );
+        margin: EdgeInsets.all(20.0),
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              _addTopMargin(20),
+              textLabel(),
+              _addTopMargin(20),
+              emailFied(bloc),
+              _addTopMargin(20),
+              passwordField(bloc),
+              Container(margin: EdgeInsets.only(top: 25.0)),
+              submitButton(bloc),
+              _addTopMargin(13),
+              signUpText(context),
+            ],
+          ),
+        ));
+  }
+
+  Widget signUpText(context) {
+    return Container(
+        child: Row(
+      children: <Widget>[
+        Text('Does not have account?'),
+        FlatButton(
+          textColor: Colors.blue,
+          child: Text(
+            'Sign Up',
+            style: TextStyle(
+                color: Color.fromRGBO(0, 209, 189, 100),
+                fontWeight: FontWeight.w500,
+                fontSize: 14),
+          ),
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Provider(
+                          child: MaterialApp(
+                            title: 'Sign Up',
+                            home: Scaffold(
+                                appBar: AppBar(
+                                    title: Text('bCredible'),
+                                    backgroundColor:
+                                        Color.fromRGBO(0, 209, 189, 100)),
+                                body: SingUpScreen()),
+                          ),
+                        )));
+          },
+        )
+      ],
+      mainAxisAlignment: MainAxisAlignment.center,
+    ));
   }
 
   Widget textLabel() {
@@ -132,7 +172,6 @@ class LoginScreen extends StatelessWidget {
           ]),
     );
   }
-// 29, 242, 222
 
   Container _addTopMargin(double x) {
     return Container(height: x);

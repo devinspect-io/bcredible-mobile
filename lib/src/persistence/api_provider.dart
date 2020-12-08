@@ -43,10 +43,17 @@ class ApiProvider {
     }
   }
 
-  Future<bool> createUser(String email, String password) async {
-    final _url = _baseUrl + "/signup";
+  Future<bool> createUser(String name, String city, String street, String email,
+      String password) async {
+    final _url = _baseUrl + "/user";
     print("baseUrl $_url $email $password");
-    Map data = {'email': email, 'password': password};
+    Map data = {
+      'name': name,
+      'city': city,
+      'street': street,
+      'email': email,
+      'password': password
+    };
     var body = json.encode(data);
     final response = await client.post("$_url",
         headers: {"Content-Type": "application/json"},

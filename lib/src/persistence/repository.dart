@@ -7,6 +7,7 @@ class Repository {
       appApiProvider.fetchBusinesses(city);
   Future<bool> singInUser(String email, String password) =>
       appApiProvider.singInUser(email, password);
-  Future<bool> createUser(String email, String password) =>
-      appApiProvider.createUser(email, password);
+  Future<bool> createUser(String name, String city, String street, String email,
+          String password) =>
+      appApiProvider.createUser(name, city, street, email, password);
 }

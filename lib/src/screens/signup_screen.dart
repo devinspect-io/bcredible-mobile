@@ -4,23 +4,35 @@ import 'package:toast/toast.dart';
 import 'list_view.dart';
 
 class SingUpScreen extends StatelessWidget {
+  List<String> _Categories = ['Please Select a Category', 'Food', 'Clothing'];
+  String _selectedCategory = 'Please Select a Category';
+
   Widget build(context) {
     final bloc = SignUpBloc();
     return Container(
-      margin: EdgeInsets.all(20.0),
-      child: Column(
-        children: <Widget>[
-          _addTopMargin(10),
-          textLabel(),
-          _addTopMargin(10),
-          emailFied(bloc),
-          _addTopMargin(10),
-          passwordField(bloc),
-          Container(margin: EdgeInsets.only(top: 25.0)),
-          submitButton(bloc)
-        ],
-      ),
-    );
+        margin: EdgeInsets.all(20.0),
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              _addTopMargin(10),
+              textLabel(),
+              _addTopMargin(10),
+              nameField(bloc),
+              _addTopMargin(10),
+              emailFied(bloc),
+              _addTopMargin(10),
+              passwordField(bloc),
+              _addTopMargin(10),
+              streetField(bloc),
+              _addTopMargin(10),
+              cityField(bloc),
+              // _addTopMargin(10),
+              // _buildLocationSelect(),
+              Container(margin: EdgeInsets.only(top: 25.0)),
+              submitButton(bloc),
+            ],
+          ),
+        ));
   }
 
   Widget textLabel() {
@@ -88,6 +100,102 @@ class SingUpScreen extends StatelessWidget {
                 //  fillColor: colorSearchBg,
               ));
         });
+  }
+
+  Widget cityField(bloc) {
+    return StreamBuilder(
+        stream: bloc.city,
+        builder: (context, snapshot) {
+          return TextField(
+              obscureText: false,
+              onChanged: bloc.changeCity,
+              keyboardType: TextInputType.text,
+              decoration: InputDecoration(
+                hintText: 'City',
+                labelText: 'City',
+                hintStyle: TextStyle(fontSize: 16),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide(
+                    width: 0,
+                    style: BorderStyle.none,
+                  ),
+                ),
+                filled: true,
+                errorText: snapshot.error,
+                contentPadding: EdgeInsets.all(16),
+                //  fillColor: colorSearchBg,
+              ));
+        });
+  }
+
+  Widget streetField(bloc) {
+    return StreamBuilder(
+        stream: bloc.street,
+        builder: (context, snapshot) {
+          return TextField(
+              obscureText: false,
+              onChanged: bloc.changeStreet,
+              keyboardType: TextInputType.text,
+              decoration: InputDecoration(
+                hintText: 'Street',
+                labelText: 'Street',
+                hintStyle: TextStyle(fontSize: 16),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide(
+                    width: 0,
+                    style: BorderStyle.none,
+                  ),
+                ),
+                filled: true,
+                errorText: snapshot.error,
+                contentPadding: EdgeInsets.all(16),
+                //  fillColor: colorSearchBg,
+              ));
+        });
+  }
+
+  Widget nameField(bloc) {
+    return StreamBuilder(
+        stream: bloc.name,
+        builder: (context, snapshot) {
+          return TextField(
+              obscureText: false,
+              onChanged: bloc.changeName,
+              keyboardType: TextInputType.text,
+              decoration: InputDecoration(
+                hintText: 'Name',
+                labelText: 'Name',
+                hintStyle: TextStyle(fontSize: 16),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide(
+                    width: 0,
+                    style: BorderStyle.none,
+                  ),
+                ),
+                filled: true,
+                errorText: snapshot.error,
+                contentPadding: EdgeInsets.all(16),
+              ));
+        });
+  }
+
+  DropdownButton _buildLocationSelect() {
+    return new DropdownButton<String>(
+      hint: Text('Please choose a location'),
+      items: _Categories.map((String value) {
+        return new DropdownMenuItem<String>(
+          value: value,
+          child: new Text(value),
+        );
+      }).toList(),
+      onChanged: (val) {
+        this._selectedCategory = val;
+      },
+      value: this._selectedCategory,
+    );
   }
 
   Widget submitButton(bloc) {
