@@ -9,9 +9,10 @@ class Business {
   String name;
   String phone;
   String street;
+  String imageUrl;
 
   Business({this.city, this.name});
-  
+
   static double checkDouble(dynamic value) {
     if (value is String) {
       return double.parse(value);
@@ -23,14 +24,12 @@ class Business {
   }
 
   Business.fromJson(Map<String, dynamic> parsedJson)
-    : Id = parsedJson['_id'],
-      avgRating = parsedJson['avg_rating'],
-      categories = List.from(parsedJson['categories']),
-      city = parsedJson['city'],
-      name = parsedJson['name'],
-      phone = parsedJson['phone'],
-      street = parsedJson['street'];
-
+      : Id = parsedJson['_id'],
+        avgRating = parsedJson['avg_rating'],
+        categories = List.from(parsedJson['categories']),
+        city = parsedJson['city'],
+        name = parsedJson['name'],
+        phone = parsedJson['phone'],
+        street = parsedJson['street'],
+        imageUrl = parsedJson['imageUrl'];
 }
-
-
