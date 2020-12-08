@@ -7,15 +7,15 @@ import '../persistence/repository.dart';
 class BusinessBloc {
   Repository _repository = Repository();
 
-  //Create a PublicSubject object responsible to add the data which is got from
+  // Create a PublicSubject object responsible to add the data which is got from
   // the server in the form of Report object and pass it to the UI screen as a stream.
-  final _businessFetcher = PublishSubject<Business>();
+  final _businessFetcher = PublishSubject<List<Business>>();
   
   //This method is used to pass the response as stream to UI
-  Stream<Business> get result => _businessFetcher.stream;
+  Stream<List<Business>> get result => _businessFetcher.stream;
 
   fetchBusinesses() async {
-    Business businessResponse = await _repository.fetchBusinesses('Islamabad');
+    List<Business> businessResponse = await _repository.fetchBusinesses('islamabad');
     _businessFetcher.sink.add(businessResponse);
   }
 

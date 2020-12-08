@@ -6,9 +6,9 @@ import '../models/business.dart';
 class ApiProvider {
   Client client = Client();
 
-  Future<Business> fetchBusinesses(String city) async {
+  Future<List<Business>> fetchBusinesses(String city) async {
     if (city == null) {
-      city = 'Islamabad';
+      city = 'islamabad';
     }
     print('Got city $city');
     final _baseUrl = "https://bcredible.herokuapp.com/get-business-by-city/" + city;
@@ -16,7 +16,8 @@ class ApiProvider {
     final response = await client.get("$_baseUrl"); // Make the network call asynchronously to fetch the data.
     print(response.body.toString());
     if (response.statusCode == 200) {
-      return Business.fromJson(json.decode(response.body)); //Return decoded response
+      return (json.decode(response.body)['businesses'] as List).map((i) =>
+        Business.fromJson(i)).toList(); //Return decoded response
     } else {
       throw Exception('Failed to load Data');
     }

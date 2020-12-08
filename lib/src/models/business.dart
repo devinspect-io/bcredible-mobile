@@ -1,8 +1,16 @@
-class Business {
-  Object business;
-  Object ratings;
+import 'dart:convert';
+import 'package:flutter/foundation.dart';
 
-  Business({this.business, this.ratings});
+class Business {
+  String Id;
+  double avgRating;
+  List<String> categories;
+  String city;
+  String name;
+  String phone;
+  String street;
+
+  Business({this.city, this.name});
   
   static double checkDouble(dynamic value) {
     if (value is String) {
@@ -15,6 +23,14 @@ class Business {
   }
 
   Business.fromJson(Map<String, dynamic> parsedJson)
-    : business = parsedJson['Business'],
-      ratings = parsedJson['Ratings'];
+    : Id = parsedJson['_id'],
+      avgRating = parsedJson['avg_rating'],
+      categories = List.from(parsedJson['categories']),
+      city = parsedJson['city'],
+      name = parsedJson['name'],
+      phone = parsedJson['phone'],
+      street = parsedJson['street'];
+
 }
+
+
