@@ -63,7 +63,7 @@ class BusinessTile extends StatelessWidget {
                         ),
                       ),
                     ]),
-                _addTopMargin(3),
+                _addTopMargin(5),
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -77,7 +77,7 @@ class BusinessTile extends StatelessWidget {
                         textAlign: TextAlign.center,
                       ),
                     ]),
-                _addTopMargin(5),
+                _addTopMargin(7),
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -90,19 +90,26 @@ class BusinessTile extends StatelessWidget {
                             fontSize: 14.0),
                         textAlign: TextAlign.center,
                       ),
-                      Container(
-                          padding: const EdgeInsets.only(
-                              left: 5, top: 2, right: 5, bottom: 2),
-                          decoration: const BoxDecoration(
-                            color: Color.fromRGBO(224, 224, 224, 100),
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(4),
-                                topRight: Radius.circular(4),
-                                bottomLeft: Radius.circular(4),
-                                bottomRight: Radius.circular(4)),
-                          ),
-                          child: _buildRatingStars(2)),
-                    ])
+                      Container(child: _buildRatingStars(business.avgRating)),
+                    ]),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.star,
+                        color: Colors.blueAccent,
+                        size: 20.0,
+                      ),
+                      Text(
+                        business.street,
+                        style: TextStyle(
+                            color: Colors.blueAccent,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14.0),
+                        textAlign: TextAlign.center,
+                      ),
+                    ]),
               ])),
         ],
       ),
@@ -123,20 +130,32 @@ class BusinessTile extends StatelessWidget {
   }
 
   Widget _buildRatingStars(double rating) {
-    return RatingBar.builder(
-      initialRating: rating,
-      minRating: 0,
-      direction: Axis.horizontal,
-      allowHalfRating: true,
-      itemCount: 5,
-      itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
-      itemBuilder: (context, _) => Icon(
+    return RatingBarIndicator(
+      rating: rating,
+      itemBuilder: (context, index) => Icon(
         Icons.star,
         color: Colors.amber,
       ),
-      onRatingUpdate: (rating) {
-        print(rating);
-      },
+      itemCount: 5,
+      itemSize: 20,
+      itemPadding: EdgeInsets.symmetric(horizontal: 0.2),
+      direction: Axis.horizontal,
     );
+    // return RatingBarIndicator.builder(
+    //   initialRating: rating,
+    //   minRating: 0,
+    //   direction: Axis.horizontal,
+    //   allowHalfRating: true,
+    //   itemCount: 5,
+    //   itemSize: 20,
+    //   itemPadding: EdgeInsets.symmetric(horizontal: 0.2),
+    //   itemBuilder: (context, _) => Icon(
+    //     Icons.star,
+    //     color: Colors.amber,
+    //   ),
+    //   onRatingUpdate: (rating) {
+    //     print(rating);
+    //   },
+    // );
   }
 }

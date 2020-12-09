@@ -44,22 +44,24 @@ class ApiProvider {
   }
 
   Future<bool> createUser(String name, String city, String street, String email,
-      String password) async {
+      String password, List<String> categories) async {
     final _url = _baseUrl + "/user";
-    print("baseUrl $_url $email $password");
+    print("baseUrl $_url $email $password $categories");
     Map data = {
       'name': name,
       'city': city,
       'street': street,
       'email': email,
-      'password': password
+      'password': password,
+      'categories': categories,
     };
     var body = json.encode(data);
     final response = await client.post("$_url",
         headers: {"Content-Type": "application/json"},
         body: body); // Make the network call asynchronously to fetch the data.
     print(response.statusCode);
-    if (response.statusCode == 200) {
+    print(response);
+    if (response.statusCode >= 200 && response.statusCode < 300) {
       return true;
       // return json.decode(response.body); //Return decoded response
     } else {

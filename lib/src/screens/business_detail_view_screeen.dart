@@ -46,8 +46,8 @@ class BusinessDetailsScreen extends StatelessWidget {
           _buildDetails(context),
           Divider(
             color: Colors.black,
-          )
-          // _buildFavoriteButton(context),
+          ),
+          _buildAddReviewButton(context),
         ],
       ),
     );
@@ -67,6 +67,7 @@ class BusinessDetailsScreen extends StatelessWidget {
   }
 
   Widget _buildRatingStars(double rating) {
+    print(rating);
     return RatingBar.builder(
       initialRating: rating,
       minRating: 0,
@@ -126,19 +127,42 @@ class BusinessDetailsScreen extends StatelessWidget {
                     style: style),
               ],
             ),
-          )
-          // new Text('Address: ',
-          //     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)
-
-          //     ),
-          // Text('${business.street + ' ' + business.city}', style: style),
-          // new Text('\n'),
-          // new Text('Phone: ', style: TextStyle(fontWeight: FontWeight.bold)),
-
-          // SizedBox(width: 40),
-          // Text('\nRating: ${business.avgRating}', style: style),
+          ),
         ],
       ),
+    );
+  }
+
+  Widget _buildAddReviewButton(context) {
+    return Visibility(
+      maintainState: true,
+      maintainAnimation: true,
+      child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.8,
+              child: RaisedButton(
+                color: Color.fromRGBO(0, 186, 168, 1),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.1),
+                    side: BorderSide(color: Color.fromRGBO(0, 186, 168, 1))),
+                onPressed: () {
+                  // if (_selectedLocation != 'Please choose a location' &&
+                  //     _selectedLocation != '') {
+                  //   print('button pressed');
+                  //   Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(builder: (context) => ListViewScreen()),
+                  //   );
+                  // }
+                },
+                child: const Text('Add Review',
+                    style: TextStyle(fontSize: 22, color: Colors.white)),
+              ),
+            ),
+          ]),
     );
   }
 

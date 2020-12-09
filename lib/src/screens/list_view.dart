@@ -49,6 +49,7 @@ class ListScreenState extends State<ListViewScreen> {
       itemBuilder: (context, index) {
         final business = results[index];
         return Card(
+          margin: EdgeInsets.all(1.5),
           child: InkWell(
             onTap: () {
               print('tapped');

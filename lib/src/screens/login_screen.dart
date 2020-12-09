@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import '../blocs/login_bloc.dart';
 import 'package:toast/toast.dart';
 import './list_view.dart';
@@ -13,13 +14,16 @@ class LoginScreen extends StatelessWidget {
           child: Column(
             children: <Widget>[
               _addTopMargin(20),
+              SvgPicture.asset("assets/images/undraw_Access_account.svg",
+                  height: MediaQuery.of(context).size.height * 0.20),
+              _addTopMargin(20),
               textLabel(),
               _addTopMargin(20),
               emailFied(bloc),
               _addTopMargin(20),
               passwordField(bloc),
               Container(margin: EdgeInsets.only(top: 25.0)),
-              submitButton(bloc),
+              submitButton(bloc, context),
               _addTopMargin(13),
               signUpText(context),
             ],
@@ -38,6 +42,7 @@ class LoginScreen extends StatelessWidget {
             'Sign Up',
             style: TextStyle(
                 color: Color.fromRGBO(0, 209, 189, 100),
+                decoration: TextDecoration.underline,
                 fontWeight: FontWeight.w500,
                 fontSize: 14),
           ),
@@ -53,7 +58,7 @@ class LoginScreen extends StatelessWidget {
                                     title: Text('bCredible'),
                                     backgroundColor:
                                         Color.fromRGBO(0, 209, 189, 100)),
-                                body: SingUpScreen()),
+                                body: SignUpScreen()),
                           ),
                         )));
           },
@@ -70,9 +75,9 @@ class LoginScreen extends StatelessWidget {
         child: Text(
           'Sign In',
           style: TextStyle(
-              color: Color.fromRGBO(0, 209, 189, 100),
+              color: Color.fromRGBO(19, 121, 111, 100),
               fontWeight: FontWeight.w500,
-              fontSize: 30),
+              fontSize: 22),
         ));
   }
 
@@ -84,7 +89,7 @@ class LoginScreen extends StatelessWidget {
             onChanged: bloc.changeEmail,
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
-              hintText: 'Email Address',
+              hintText: 'test@test.com',
               labelText: 'Email Address',
               hintStyle: TextStyle(fontSize: 16),
               border: OutlineInputBorder(
@@ -112,8 +117,8 @@ class LoginScreen extends StatelessWidget {
               onChanged: bloc.changePassword,
               keyboardType: TextInputType.text,
               decoration: InputDecoration(
-                hintText: 'Passwords',
-                labelText: 'Password',
+                hintText: 'password',
+                labelText: 'password',
                 hintStyle: TextStyle(fontSize: 16),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
@@ -130,7 +135,7 @@ class LoginScreen extends StatelessWidget {
         });
   }
 
-  Widget submitButton(bloc) {
+  Widget submitButton(bloc, context) {
     return Visibility(
       maintainState: true,
       maintainAnimation: true,
@@ -139,7 +144,7 @@ class LoginScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(
-              width: 150,
+              width: MediaQuery.of(context).size.width * 0.7,
               child: StreamBuilder(
                 stream: bloc.submitValid,
                 builder: (context, snapshot) {
@@ -153,7 +158,7 @@ class LoginScreen extends StatelessWidget {
                                 MaterialPageRoute(
                                     builder: (context) => ListViewScreen()));
                           } else {
-                            Toast.show("Something went wrong", context,
+                            Toast.show("incorrect Email/Password", context,
                                 duration: Toast.LENGTH_SHORT,
                                 gravity: Toast.BOTTOM);
                             return null;
@@ -165,6 +170,10 @@ class LoginScreen extends StatelessWidget {
                       child: Text('Submit'),
                       textColor: Color.fromRGBO(255, 255, 255, 1.0),
                       color: Color.fromRGBO(0, 186, 168, 1.0),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.1),
+                          side: BorderSide(
+                              color: Color.fromRGBO(0, 186, 168, 1))),
                       disabledColor: Color.fromRGBO(29, 242, 222, 1.0));
                 },
               ),

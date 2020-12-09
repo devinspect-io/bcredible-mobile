@@ -8,6 +8,6 @@ class Repository {
   Future<bool> singInUser(String email, String password) =>
       appApiProvider.singInUser(email, password);
   Future<bool> createUser(String name, String city, String street, String email,
-          String password) =>
-      appApiProvider.createUser(name, city, street, email, password);
+          String password, List<String> categories) =>
+      appApiProvider.createUser(name, city, street, email, password, categories);
 }
