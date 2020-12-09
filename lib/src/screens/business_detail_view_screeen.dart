@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../models/business.dart';
 import './image_container.dart';
 // import '../blocs/bloc_provider.dart';
@@ -19,24 +20,33 @@ class BusinessDetailsScreen extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+          _addTopMargin(10),
           _buildBanner(),
           Padding(
-            padding: const EdgeInsets.all(8),
-            child: Column(
+            padding: const EdgeInsets.only(top: 8),
+            child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
+                _addTopMargin(5),
                 Text(
                   business.name,
-                  style: textTheme.subtitle.copyWith(fontSize: 18),
+                  style: textTheme.subtitle.copyWith(fontSize: 20),
                 ),
-                Text(
-                  business.street,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w100),
-                ),
+                Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: <Widget>[
+                      _buildRatingStars(business.avgRating),
+                    ])
               ],
             ),
           ),
+          // Column (
+          // ),
           _buildDetails(context),
+          Divider(
+            color: Colors.black,
+          )
           // _buildFavoriteButton(context),
         ],
       ),
@@ -46,21 +56,87 @@ class BusinessDetailsScreen extends StatelessWidget {
   Widget _buildBanner() {
     return ImageContainer(
       height: 200,
-      url: business.imageUrl,
+      url: business.imageUrl != null
+          ? business.imageUrl
+          : 'https://b.zmtcdn.com/data/pictures/1/16780641/99091045c8222b164a24442de4548b9e.jpg',
+    );
+  }
+
+  Container _addTopMargin(double x) {
+    return Container(height: x);
+  }
+
+  Widget _buildRatingStars(double rating) {
+    return RatingBar.builder(
+      initialRating: rating,
+      minRating: 0,
+      itemSize: 18,
+      direction: Axis.horizontal,
+      allowHalfRating: true,
+      itemCount: 5,
+      itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
+      itemBuilder: (context, _) => Icon(
+        Icons.star,
+        color: Colors.amber,
+      ),
+      onRatingUpdate: (rating) {
+        print(rating);
+      },
     );
   }
 
   Widget _buildDetails(BuildContext context) {
-    final style = TextStyle(fontSize: 16);
-
-    return Padding(
-      padding: EdgeInsets.only(left: 10),
-      child: Row(
+    final style = TextStyle(fontSize: 13);
+    return Container(
+      padding: EdgeInsets.only(left: 6),
+      child: new Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          Text('Price: ${business.name}', style: style),
-          SizedBox(width: 40),
-          Text('Rating: ${business.avgRating}', style: style),
+          new RichText(
+            text: new TextSpan(
+              // Note: Styles for TextSpans must be explicitly defined.
+              // Child text spans will inherit styles from parent
+              style: new TextStyle(
+                fontSize: 16,
+                color: Colors.black,
+              ),
+              children: <TextSpan>[
+                new TextSpan(
+                    text: ' Address: ',
+                    style: new TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 13)),
+                new TextSpan(
+                    text: '${business.street + ' ' + business.city}',
+                    style: style),
+                new TextSpan(
+                    text: '\n\nPhone: ',
+                    style: new TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 13)),
+                new TextSpan(
+                    text:
+                        '${business.phone.length > 0 ? business.phone : '0302-999999'}',
+                    style: style),
+                new TextSpan(
+                    text: '\n\nHours: ',
+                    style: new TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 13)),
+                new TextSpan(
+                    text:
+                        '${business.hours != null ? business.hours : '11:00AM to 1:00AM'}',
+                    style: style),
+              ],
+            ),
+          )
+          // new Text('Address: ',
+          //     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)
+
+          //     ),
+          // Text('${business.street + ' ' + business.city}', style: style),
+          // new Text('\n'),
+          // new Text('Phone: ', style: TextStyle(fontWeight: FontWeight.bold)),
+
+          // SizedBox(width: 40),
+          // Text('\nRating: ${business.avgRating}', style: style),
         ],
       ),
     );
