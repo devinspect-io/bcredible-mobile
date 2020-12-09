@@ -10,9 +10,6 @@ class App extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        appBar: AppBar(
-          title: Text('bCredible'),
-          backgroundColor: Color.fromRGBO(0, 209, 189, 100)),
         body: HomeScreen(),
       )
     );
@@ -25,12 +22,13 @@ class App extends StatelessWidget {
 //   Widget build(BuildContext context) {
 //     return Provider(
 //       child: MaterialApp(
+//         debugShowCheckedModeBanner: false,
 //         title: 'Log Me In',
 //         home: Scaffold(
 //             appBar: AppBar(
 //                 title: Text('bCredible'),
 //                 backgroundColor: Color.fromRGBO(0, 209, 189, 100)),
-//             body: SignUpScreen()),
+//             body: LoginScreen()),
 //       ),
 //     );
 //   }

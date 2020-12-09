@@ -69,7 +69,7 @@ class BusinessTile extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        "Lorem Ipsum shop dealer sells Fish",
+                        getRepresentableDesc(business.description),
                         style: TextStyle(
                             color: Colors.grey,
                             fontWeight: FontWeight.bold,
@@ -83,7 +83,7 @@ class BusinessTile extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        "Total Reviews: 10",
+                        "Total Reviews: ${business.totalRatings}",
                         style: TextStyle(
                             color: Color.fromRGBO(10, 10, 0, 100),
                             fontWeight: FontWeight.bold,
@@ -119,10 +119,20 @@ class BusinessTile extends StatelessWidget {
             builder: (context) => BusinessDetailsScreen(business: business),
           ),
         );
-        print("tapped on container");
+        // print("tapped on container");
       },
     );
     ;
+  }
+
+  String getRepresentableDesc(String desc) {
+    if (desc == null) {
+      return "Lorem Ipsum shop dealer sells Fish";
+    }
+    if (desc.length > 38) {
+      return desc.substring(0, 38) + "..";
+    }
+    return desc;
   }
 
   Container _addTopMargin(double x) {

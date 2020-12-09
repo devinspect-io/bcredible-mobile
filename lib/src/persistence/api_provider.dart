@@ -11,6 +11,7 @@ class ApiProvider {
     if (city == null) {
       city = 'islamabad';
     }
+    city = city.toLowerCase();
     print('Got city $city');
     final _url = _baseUrl + "/get-business-by-city/" + city;
     print("baseUrl $_url");

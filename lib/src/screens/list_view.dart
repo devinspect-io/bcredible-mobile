@@ -4,14 +4,20 @@ import './business_tile.dart';
 import '../blocs/business_bloc.dart';
 
 class ListViewScreen extends StatefulWidget {
+  final String locationCity;
+  ListViewScreen({Key key, @required this.locationCity}) : super(key: key);
+
   @override
-  ListScreenState createState() => ListScreenState();
+  ListScreenState createState() => ListScreenState(locationCity);
 }
 
 class ListScreenState extends State<ListViewScreen> {
+  String locationCity;
+  ListScreenState(this.locationCity);
+
   @override
   Widget build(BuildContext context) {
-    businessBloc.fetchBusinesses();
+    businessBloc.fetchBusinesses(locationCity);
     return StreamBuilder(
       stream: businessBloc.result,
       builder: (context, AsyncSnapshot<List<Business>> snapshot) {
@@ -52,7 +58,7 @@ class ListScreenState extends State<ListViewScreen> {
           margin: EdgeInsets.all(1.5),
           child: InkWell(
             onTap: () {
-              print('tapped');
+              // print('tapped');
             },
             child: Padding(
               padding: const EdgeInsets.all(0.2),

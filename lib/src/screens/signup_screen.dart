@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import '../blocs/signup_bloc.dart';
 import 'package:toast/toast.dart';
-import 'list_view.dart';
+import 'home_screen.dart';
 import './login_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -226,7 +226,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ListViewScreen())
+                                builder: (context) => HomeScreen())
                             );
                           } else {
                             Toast.show("Something went wrong", context,
@@ -272,15 +272,16 @@ class SignUpScreenState extends State<SignUpScreen> {
               context,
               MaterialPageRoute(
                 builder: (context) => Provider(
-                    child: MaterialApp(
-                      title: 'Sign in',
-                      home: Scaffold(
-                        appBar: AppBar(
-                          title: Text('bCredible'),
-                          backgroundColor: Color.fromRGBO(0, 209, 189, 100)),
-                        body: LoginScreen(),
-                      ),
+                  child: MaterialApp(
+                    debugShowCheckedModeBanner: false,
+                    title: 'Sign in',
+                    home: Scaffold(
+                      appBar: AppBar(
+                        title: Text('bCredible'),
+                        backgroundColor: Color.fromRGBO(0, 209, 189, 100)),
+                      body: LoginScreen(),
                     ),
+                  ),
                 )));
           },
         )

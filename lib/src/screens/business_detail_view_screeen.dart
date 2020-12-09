@@ -1,6 +1,7 @@
 import 'package:bcredible/src/screens/rating_dialog_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import './list_view.dart';
 import 'package:toast/toast.dart';
 import '../models/business.dart';
 import './image_container.dart';
@@ -159,6 +160,14 @@ class BusinessDetailsScreen extends StatelessWidget {
                   if (resp) {
                     Toast.show("Thank you!", context,
                         duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+                    // business.avgRating = business.avgRating * business.totalRatings + results['stars'] /
+                    // Navigator.of(context).popUntil(Modal);
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //       builder: (context) =>
+                    //           ListViewScreen(locationCity: 'islamabad')),
+                    // );
                   }
                 },
                 child: const Text('Add Review',
