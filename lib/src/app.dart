@@ -30,7 +30,7 @@ class App extends StatelessWidget {
             appBar: AppBar(
                 title: Text('bCredible'),
                 backgroundColor: Color.fromRGBO(0, 209, 189, 100)),
-            body: SignUpScreen()),
+            body: HomeScreen()),
       ),
     );
   }

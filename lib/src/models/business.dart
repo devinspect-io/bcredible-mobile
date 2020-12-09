@@ -10,6 +10,7 @@ class Business {
   String phone;
   String street;
   String imageUrl;
+  String hours;
 
   Business({this.city, this.name});
 
@@ -31,5 +32,6 @@ class Business {
         name = parsedJson['name'],
         phone = parsedJson['phone'],
         street = parsedJson['street'],
-        imageUrl = parsedJson['imageUrl'];
+        imageUrl = parsedJson['imageUrl'],
+        hours = parsedJson['hours'];
 }
