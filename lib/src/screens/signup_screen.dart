@@ -1,11 +1,18 @@
+import 'package:bcredible/src/blocs/login_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import '../blocs/signup_bloc.dart';
 import 'package:toast/toast.dart';
 import 'list_view.dart';
+import './login_screen.dart';
 
-class SingUpScreen extends StatelessWidget {
-  List<String> _Categories = ['Please Select a Category', 'Food', 'Clothing'];
-  String _selectedCategory = 'Please Select a Category';
+class SignUpScreen extends StatefulWidget {
+  @override
+  SignUpScreenState createState() => SignUpScreenState();
+}
+
+class SignUpScreenState extends State<SignUpScreen> {
+  bool _checked = false;
 
   Widget build(context) {
     final bloc = SignUpBloc();
@@ -14,6 +21,9 @@ class SingUpScreen extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
+              _addTopMargin(10),
+              SvgPicture.asset("assets/images/undraw_welcome.svg",
+                height: MediaQuery.of(context).size.height * 0.20),
               _addTopMargin(10),
               textLabel(),
               _addTopMargin(10),
@@ -26,13 +36,26 @@ class SingUpScreen extends StatelessWidget {
               streetField(bloc),
               _addTopMargin(10),
               cityField(bloc),
-              // _addTopMargin(10),
-              // _buildLocationSelect(),
+              // checkBoxes(bloc),
               Container(margin: EdgeInsets.only(top: 25.0)),
-              submitButton(bloc),
+              submitButton(bloc, context),
+              loginText(context)
             ],
           ),
         ));
+  }
+
+  Widget checkBoxes(bloc) {
+    return CheckboxListTile(
+      title: Text("title text"),
+      value: _checked,
+      onChanged: (newValue) { 
+        this.setState(() {
+          _checked = newValue; 
+        }); 
+      },
+      controlAffinity: ListTileControlAffinity.leading,  //  <-- leading Checkbox
+    );
   }
 
   Widget textLabel() {
@@ -40,11 +63,11 @@ class SingUpScreen extends StatelessWidget {
         alignment: Alignment.center,
         padding: EdgeInsets.all(10),
         child: Text(
-          'Sign Up',
+          'Create your account',
           style: TextStyle(
-              color: Color.fromRGBO(0, 209, 189, 100),
-              fontWeight: FontWeight.w500,
-              fontSize: 30),
+            color: Color.fromRGBO(19, 121, 111, 100),
+            fontWeight: FontWeight.w500,
+            fontSize: 20),
         ));
   }
 
@@ -182,23 +205,7 @@ class SingUpScreen extends StatelessWidget {
         });
   }
 
-  DropdownButton _buildLocationSelect() {
-    return new DropdownButton<String>(
-      hint: Text('Please choose a location'),
-      items: _Categories.map((String value) {
-        return new DropdownMenuItem<String>(
-          value: value,
-          child: new Text(value),
-        );
-      }).toList(),
-      onChanged: (val) {
-        this._selectedCategory = val;
-      },
-      value: this._selectedCategory,
-    );
-  }
-
-  Widget submitButton(bloc) {
+  Widget submitButton(bloc, context) {
     return Visibility(
       maintainState: true,
       maintainAnimation: true,
@@ -207,7 +214,7 @@ class SingUpScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(
-              width: 150,
+              width: MediaQuery.of(context).size.width * 0.7,
               child: StreamBuilder(
                 stream: bloc.submitValid,
                 builder: (context, snapshot) {
@@ -217,13 +224,14 @@ class SingUpScreen extends StatelessWidget {
                           final result = await bloc.submit();
                           if (result) {
                             Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ListViewScreen()));
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ListViewScreen())
+                            );
                           } else {
                             Toast.show("Something went wrong", context,
-                                duration: Toast.LENGTH_SHORT,
-                                gravity: Toast.BOTTOM);
+                              duration: Toast.LENGTH_SHORT,
+                              gravity: Toast.BOTTOM);
                             return null;
                           }
                         } else {
@@ -232,6 +240,9 @@ class SingUpScreen extends StatelessWidget {
                       },
                       child: Text('Submit'),
                       textColor: Color.fromRGBO(255, 255, 255, 1.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.1),
+                        side: BorderSide(color: Color.fromRGBO(0, 186, 168, 1))),
                       color: Color.fromRGBO(0, 186, 168, 1.0),
                       disabledColor: Color.fromRGBO(29, 242, 222, 1.0));
                 },
@@ -240,7 +251,43 @@ class SingUpScreen extends StatelessWidget {
           ]),
     );
   }
-// 29, 242, 222
+
+  Widget loginText(context) {
+    return Container(
+        child: Row(
+      children: <Widget>[
+        Text('Already have an account?'),
+        FlatButton(
+          textColor: Colors.blue,
+          child: Text(
+            'Sign in',
+            style: TextStyle(
+                color: Color.fromRGBO(0, 209, 189, 100),
+                fontWeight: FontWeight.w500,
+                decoration: TextDecoration.underline,
+                fontSize: 14),
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Provider(
+                    child: MaterialApp(
+                      title: 'Sign in',
+                      home: Scaffold(
+                        appBar: AppBar(
+                          title: Text('bCredible'),
+                          backgroundColor: Color.fromRGBO(0, 209, 189, 100)),
+                        body: LoginScreen(),
+                      ),
+                    ),
+                )));
+          },
+        )
+      ],
+      mainAxisAlignment: MainAxisAlignment.center,
+    ));
+  }
 
   Container _addTopMargin(double x) {
     return Container(height: x);

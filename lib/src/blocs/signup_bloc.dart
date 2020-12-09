@@ -37,8 +37,9 @@ class SignUpBloc extends Object with Validators {
     final validName = _name.value;
     final validCity = _city.value;
     final validStreet = _street.value;
+    final categories = ["food"];
     final resp = await _repository.createUser(
-        validName, validCity, validStreet, validEmail, validPass);
+      validName, validCity, validStreet, validEmail, validPass, categories);
     return resp;
   }
 
