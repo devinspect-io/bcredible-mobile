@@ -15,7 +15,7 @@ class LoginScreen extends StatelessWidget {
             children: <Widget>[
               _addTopMargin(20),
               SvgPicture.asset("assets/images/undraw_Access_account.svg",
-                height: MediaQuery.of(context).size.height * 0.20),
+                  height: MediaQuery.of(context).size.height * 0.20),
               _addTopMargin(20),
               textLabel(),
               _addTopMargin(20),
@@ -48,19 +48,19 @@ class LoginScreen extends StatelessWidget {
           ),
           onPressed: () {
             Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => Provider(
-                    child: MaterialApp(
-                      title: 'Sign Up',
-                      home: Scaffold(
-                        appBar: AppBar(
-                          title: Text('bCredible'),
-                          backgroundColor: Color.fromRGBO(0, 209, 189, 100)),
-                        body: SignUpScreen()
-                      ),
-                    ),
-                )));
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Provider(
+                          child: MaterialApp(
+                            title: 'Sign Up',
+                            home: Scaffold(
+                                appBar: AppBar(
+                                    title: Text('bCredible'),
+                                    backgroundColor:
+                                        Color.fromRGBO(0, 209, 189, 100)),
+                                body: SignUpScreen()),
+                          ),
+                        )));
           },
         )
       ],
@@ -75,9 +75,9 @@ class LoginScreen extends StatelessWidget {
         child: Text(
           'Sign In',
           style: TextStyle(
-            color: Color.fromRGBO(19, 121, 111, 100),
-            fontWeight: FontWeight.w500,
-            fontSize: 22),
+              color: Color.fromRGBO(19, 121, 111, 100),
+              fontWeight: FontWeight.w500,
+              fontSize: 22),
         ));
   }
 
@@ -86,24 +86,24 @@ class LoginScreen extends StatelessWidget {
       stream: bloc.email,
       builder: (context, snapshot) {
         return TextField(
-          onChanged: bloc.changeEmail,
-          keyboardType: TextInputType.emailAddress,
-          decoration: InputDecoration(
-            hintText: 'admin@test.com',
-            labelText: 'Email Address',
-            hintStyle: TextStyle(fontSize: 16),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(
-                width: 0,
-                style: BorderStyle.none,
+            onChanged: bloc.changeEmail,
+            keyboardType: TextInputType.emailAddress,
+            decoration: InputDecoration(
+              hintText: 'test@test.com',
+              labelText: 'Email Address',
+              hintStyle: TextStyle(fontSize: 16),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(
+                  width: 0,
+                  style: BorderStyle.none,
+                ),
               ),
-            ),
-            filled: true,
-            errorText: snapshot.error,
-            contentPadding: EdgeInsets.all(16),
-            //  fillColor: colorSearchBg,
-          ));
+              filled: true,
+              errorText: snapshot.error,
+              contentPadding: EdgeInsets.all(16),
+              //  fillColor: colorSearchBg,
+            ));
       },
     );
   }
@@ -171,8 +171,9 @@ class LoginScreen extends StatelessWidget {
                       textColor: Color.fromRGBO(255, 255, 255, 1.0),
                       color: Color.fromRGBO(0, 186, 168, 1.0),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.1),
-                        side: BorderSide(color: Color.fromRGBO(0, 186, 168, 1))),
+                          borderRadius: BorderRadius.circular(10.1),
+                          side: BorderSide(
+                              color: Color.fromRGBO(0, 186, 168, 1))),
                       disabledColor: Color.fromRGBO(29, 242, 222, 1.0));
                 },
               ),
