@@ -9,5 +9,9 @@ class Repository {
       appApiProvider.singInUser(email, password);
   Future<bool> createUser(String name, String city, String street, String email,
           String password, List<String> categories) =>
-      appApiProvider.createUser(name, city, street, email, password, categories);
+      appApiProvider.createUser(
+          name, city, street, email, password, categories);
+  Future<bool> createRating(
+          int stars, String review, String userId, String businessId) =>
+      appApiProvider.createRating(stars, review, userId, businessId);
 }
