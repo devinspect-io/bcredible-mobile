@@ -97,7 +97,7 @@ class BusinessTile extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Icon(
-                        Icons.location_pin,
+                        Icons.star,
                         color: Colors.blueAccent,
                         size: 20.0,
                       ),
