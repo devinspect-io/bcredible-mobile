@@ -11,6 +11,7 @@ class Business {
   String street;
   String imageUrl;
   int totalRatings;
+  String description;
   String hours;
 
   Business({this.city, this.name});
@@ -35,5 +36,6 @@ class Business {
         street = parsedJson['street'],
         totalRatings = parsedJson['total_ratings'],
         imageUrl = parsedJson['imageUrl'],
+        description = parsedJson['description'],
         hours = parsedJson['hours'];
 }

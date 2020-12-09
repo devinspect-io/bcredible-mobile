@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import '../blocs/login_bloc.dart';
 import 'package:toast/toast.dart';
-import './list_view.dart';
+import './home_screen.dart';
 import './signup_screen.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -52,6 +52,7 @@ class LoginScreen extends StatelessWidget {
                 MaterialPageRoute(
                     builder: (context) => Provider(
                           child: MaterialApp(
+                          debugShowCheckedModeBanner: false,
                             title: 'Sign Up',
                             home: Scaffold(
                                 appBar: AppBar(
@@ -156,7 +157,7 @@ class LoginScreen extends StatelessWidget {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => ListViewScreen()));
+                                    builder: (context) => HomeScreen()));
                           } else {
                             Toast.show("incorrect Email/Password", context,
                                 duration: Toast.LENGTH_SHORT,

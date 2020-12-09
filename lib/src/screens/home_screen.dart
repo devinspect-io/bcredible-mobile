@@ -1,3 +1,4 @@
+import 'package:bcredible/src/blocs/login_bloc.dart';
 import 'package:flutter/material.dart';
 import './list_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -18,7 +19,19 @@ class HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return _buildHomeScreen();
+    return Provider(
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Sign in',
+        home: Scaffold(
+          appBar: AppBar(
+            title: Text('bCredible'),
+            backgroundColor: Color.fromRGBO(0, 209, 189, 100)),
+          body: _buildHomeScreen(),
+        ),
+      ),
+    );
+    // return ();
   }
 
   SingleChildScrollView _buildHomeScreen() {
@@ -79,7 +92,6 @@ class HomeScreenState extends State<HomeScreen> {
       }).toList(),
       onChanged: (val) {
         _selectedLocation = val;
-        print(_selectedLocation);
         this.setState(() {});
       },
       value: _selectedLocation,
@@ -108,10 +120,10 @@ class HomeScreenState extends State<HomeScreen> {
                 onPressed: () {
                   if (_selectedLocation != 'Please choose a location' &&
                       _selectedLocation != '') {
-                    print('button pressed');
+                    // print('button pressed');
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => ListViewScreen()),
+                      MaterialPageRoute(builder: (context) => ListViewScreen(locationCity: _selectedLocation)),
                     );
                   }
                 },

@@ -14,8 +14,8 @@ class BusinessBloc {
   //This method is used to pass the response as stream to UI
   Stream<List<Business>> get result => _businessFetcher.stream;
 
-  fetchBusinesses() async {
-    List<Business> businessResponse = await _repository.fetchBusinesses('islamabad');
+  fetchBusinesses(String city) async {
+    List<Business> businessResponse = await _repository.fetchBusinesses(city);
     _businessFetcher.sink.add(businessResponse);
   }
 
