@@ -21,30 +21,33 @@ class HomeScreenState extends State<HomeScreen> {
     return _buildHomeScreen();
   }
 
-  Container _buildHomeScreen() {
-    return Container(
-      padding: const EdgeInsets.all(17.0),
-      margin: const EdgeInsets.only(top: 50.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          _buildGettingStarted(),
-        ],
+  SingleChildScrollView _buildHomeScreen() {
+    return SingleChildScrollView( 
+      child: Container(
+        padding: const EdgeInsets.all(17.0),
+        margin: const EdgeInsets.only(top: 50.0),
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            _buildGettingStarted(),
+          ],
+        ),
       ),
     );
   }
 
   Container _buildGettingStarted() {
     return Container(
-        child: Column(children: <Widget>[
+      child: Column(children: <Widget>[
       Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SvgPicture.asset("assets/images/undraw_right_direction.svg",
-                height: 90)
+                height: MediaQuery.of(context).size.height * 0.35)
           ]),
-      _addTopMargin(10),
+      _addTopMargin(20),
       Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -55,12 +58,12 @@ class HomeScreenState extends State<HomeScreen> {
               textAlign: TextAlign.center,
             ),
           ]),
-      _addTopMargin(10),
+      _addTopMargin(20),
       Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [_buildLocationSelect()]),
-      _addTopMargin(50),
+      _addTopMargin(90),
       _buildGetStartedButton()
     ]));
   }
@@ -96,7 +99,7 @@ class HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(
-              width: 320,
+              width: MediaQuery.of(context).size.width * 0.8,
               child: RaisedButton(
                 color: Color.fromRGBO(0, 186, 168, 1),
                 shape: RoundedRectangleBorder(
