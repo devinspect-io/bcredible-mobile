@@ -5,6 +5,8 @@ class Repository {
   ApiProvider appApiProvider = ApiProvider();
   Future<List<Business>> fetchBusinesses(String city) =>
       appApiProvider.fetchBusinesses(city);
+   Future<Business> fetchBusiness(String id) =>
+      appApiProvider.fetchBusiness(id);
   Future<bool> singInUser(String email, String password) =>
       appApiProvider.singInUser(email, password);
   Future<bool> createUser(String name, String city, String street, String email,

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:bcredible/src/screens/rating_dialog_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -7,49 +9,90 @@ import '../models/business.dart';
 import './image_container.dart';
 import '../blocs/business_bloc.dart';
 
-class BusinessDetailsScreen extends StatelessWidget {
+class BusinessDetailsScreen extends StatefulWidget {
   final Business business;
-  const BusinessDetailsScreen({Key key, this.business}) : super(key: key);
+  BusinessDetailsScreen({Key key, @required this.business}) : super(key: key);
+
+  @override
+  BusinessDetailsScreenState createState() => BusinessDetailsScreenState(business);
+}
+
+class BusinessDetailsScreenState extends State<BusinessDetailsScreen>  {
+  Business business;
+  Business businessNew;
+  BusinessDetailsScreenState(this.business);
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(business.name),
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              _addTopMargin(15),
-              _buildBanner(),
-              Padding(
-                padding: const EdgeInsets.only(left: 10, top: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    _addTopMargin(5),
-                    Text(
-                      business.name + '\t',
-                      style: textTheme.subtitle.copyWith(fontSize: 20),
+    businessBloc.fetchBusiness(business.Id);
+    return StreamBuilder(
+      stream: businessBloc.resultb,
+      builder: (context, AsyncSnapshot<Business> snapshot) {
+        if (!snapshot.hasData) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        if (snapshot.hasData) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text(snapshot.data.name),
+            ),
+            body: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  _addTopMargin(1),
+                  _buildBanner(context, snapshot.data.imageUrl),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10, top: 10, right: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          snapshot.data.name,
+                          style: TextStyle( fontWeight: FontWeight.bold, fontSize: 24),
+                        ),
+                        _buildRatingStars(snapshot.data.avgRating, snapshot.data.totalRatings),
+                      ],
                     ),
-                    _buildRatingStars(business.avgRating),
-                  ],
-                ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10, top: 10, right: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Container (
+                          width: MediaQuery.of(context).size.width*0.8,
+                          child: new Column (
+                            children: <Widget>[
+                              new Text ( snapshot.data.description != null
+                                ? snapshot.data.description
+                                : "Lorem Ipsum shop dealer sells Fish", textAlign: TextAlign.left,
+                                style: TextStyle( fontWeight: FontWeight.normal, fontSize: 16, color: Color.fromRGBO(43, 43, 43, 100)),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // Column (
+                  // ),
+                  _buildDetails(context),
+                  _divider(),
+                  // Divider(
+                  //   color: Colors.black,
+                  // ),
+                  _buildAddReviewButton(context),
+                ],
               ),
-              // Column (
-              // ),
-              _buildDetails(context),
-              _divider(),
-              // Divider(
-              //   color: Colors.black,
-              // ),
-              _buildAddReviewButton(context),
-            ],
-          ),
-        ));
+            ));
+        } else if (snapshot.hasError) {
+          return Text(snapshot.error.toString());
+        }
+        return Center(child: CircularProgressIndicator());
+      });
   }
 
   _divider() {
@@ -60,12 +103,14 @@ class BusinessDetailsScreen extends StatelessWidget {
     ]);
   }
 
-  Widget _buildBanner() {
+  Widget _buildBanner(BuildContext context, String url) {
+    Random random = new Random();
+    int randomNumber = random.nextInt(200) + 400; // from 10 upto 99 included
     return ImageContainer(
       height: 200,
       url: business.imageUrl != null
           ? business.imageUrl
-          : 'https://b.zmtcdn.com/data/pictures/1/16780641/99091045c8222b164a24442de4548b9e.jpg',
+          : "https://picsum.photos/${randomNumber}",
     );
   }
 
@@ -73,17 +118,30 @@ class BusinessDetailsScreen extends StatelessWidget {
     return Container(height: x);
   }
 
-  Widget _buildRatingStars(double rating) {
-    return RatingBarIndicator(
-      rating: rating,
-      itemBuilder: (context, index) => Icon(
-        Icons.star,
-        color: Colors.amber,
-      ),
-      itemCount: 5,
-      itemSize: 20,
-      itemPadding: EdgeInsets.symmetric(horizontal: 0.2),
-      direction: Axis.horizontal,
+  Widget _buildRatingStars(double rating, int reviewCount) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          "${rating}",
+          style: TextStyle( fontWeight: FontWeight.bold, fontSize: 20),
+        ),
+        RatingBarIndicator(
+          rating: rating,
+          itemBuilder: (context, index) => Icon(
+            Icons.star,
+            color: Colors.amber,
+          ),
+          itemCount: 5,
+          itemSize: 20,
+          itemPadding: EdgeInsets.symmetric(horizontal: 0.2),
+          direction: Axis.horizontal,
+        ),
+        Text(
+          "${reviewCount} reviews",
+          style: TextStyle( fontWeight: FontWeight.normal, fontSize: 14),
+        ),
+      ],
     );
   }
 
@@ -152,22 +210,26 @@ class BusinessDetailsScreen extends StatelessWidget {
                 onPressed: () async {
                   var results = await showDialog(
                       context: context, builder: (_) => RatingDialog());
-                  final resp = await businessBloc.submitRating(
+                  if (results != null) {
+                    final resp = await businessBloc.submitRating(
                       results['stars'],
                       results['review'],
-                      '5fd08f99a8ea89477a623983',
+                      '5fd08b61a8ea89477a623982',
                       business.Id);
-                  if (resp) {
-                    Toast.show("Thank you!", context,
-                        duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
-                    // business.avgRating = business.avgRating * business.totalRatings + results['stars'] /
-                    // Navigator.of(context).popUntil(Modal);
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //       builder: (context) =>
-                    //           ListViewScreen(locationCity: 'islamabad')),
-                    // );
+                    if (resp) {
+                      Toast.show("Thank you!", context,
+                          duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+                      setState(() {});
+
+                      // business.avgRating = business.avgRating * business.totalRatings + results['stars'] /
+                      // Navigator.of(context).popUntil(Modal);
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //       builder: (context) =>
+                      //           ListViewScreen(locationCity: 'islamabad')),
+                      // );
+                    }
                   }
                 },
                 child: const Text('Add Review',

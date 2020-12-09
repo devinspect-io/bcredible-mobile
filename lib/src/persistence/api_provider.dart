@@ -12,16 +12,23 @@ class ApiProvider {
       city = 'islamabad';
     }
     city = city.toLowerCase();
-    print('Got city $city');
     final _url = _baseUrl + "/get-business-by-city/" + city;
-    print("baseUrl $_url");
     final response = await client.get(
         "$_url"); // Make the network call asynchronously to fetch the data.
-    print(response.body.toString());
     if (response.statusCode == 200) {
       return (json.decode(response.body)['businesses'] as List)
           .map((i) => Business.fromJson(i))
           .toList(); //Return decoded response
+    } else {
+      throw Exception('Failed to load Data');
+    }
+  }
+
+  Future<Business> fetchBusiness(String id) async {
+    final _url = _baseUrl + "/business/" + id;
+    final response = await client.get("$_url");
+    if (response.statusCode == 200) {
+      return Business.fromJson(json.decode(response.body)['business']);
     } else {
       throw Exception('Failed to load Data');
     }
@@ -38,7 +45,6 @@ class ApiProvider {
     print(response.statusCode);
     if (response.statusCode == 200) {
       return true;
-      // return json.decode(response.body); //Return decoded response
     } else {
       return false;
     }
@@ -61,10 +67,8 @@ class ApiProvider {
         headers: {"Content-Type": "application/json"},
         body: body); // Make the network call asynchronously to fetch the data.
     print(response.statusCode);
-    print(response);
     if (response.statusCode >= 200 && response.statusCode < 300) {
       return true;
-      // return json.decode(response.body); //Return decoded response
     } else {
       return false;
     }
@@ -79,16 +83,13 @@ class ApiProvider {
       'comment': review,
       'rating': stars,
     };
-    print(data);
     var body = json.encode(data);
     final response = await client.post("$_url",
         headers: {"Content-Type": "application/json"},
         body: body); // Make the network call asynchronously to fetch the data.
     print(response.statusCode);
-    print(response);
     if (response.statusCode >= 200 && response.statusCode < 300) {
       return true;
-      // return json.decode(response.body); //Return decoded response
     } else {
       return false;
     }

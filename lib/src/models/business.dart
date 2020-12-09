@@ -9,6 +9,7 @@ class Business {
   String name;
   String phone;
   String street;
+  List<dynamic> ratings;
   String imageUrl;
   int totalRatings;
   String description;
@@ -35,7 +36,8 @@ class Business {
         phone = parsedJson['phone'],
         street = parsedJson['street'],
         totalRatings = parsedJson['total_ratings'],
-        imageUrl = parsedJson['imageUrl'],
+        imageUrl = parsedJson['imageURL'],
         description = parsedJson['description'],
+        ratings = parsedJson['ratings'],
         hours = parsedJson['hours'];
 }

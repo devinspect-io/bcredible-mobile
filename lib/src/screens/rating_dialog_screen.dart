@@ -7,7 +7,7 @@ class RatingDialog extends StatefulWidget {
 
 class _RatingDialogState extends State<RatingDialog> {
   int _stars = 0;
-  String _review = '';
+  String _review = 'I rated this business 10/10';
 
   Widget _buildStar(int starCount) {
     return InkWell(
@@ -62,7 +62,7 @@ class _RatingDialogState extends State<RatingDialog> {
       ]),
       actions: <Widget>[
         Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               FlatButton(
                 padding: EdgeInsets.zero,
@@ -71,7 +71,7 @@ class _RatingDialogState extends State<RatingDialog> {
               ),
               FlatButton(
                 padding: EdgeInsets.zero,
-                child: Text('OK'),
+                child: Text('SAVE'),
                 onPressed: () {
                   Map data = {'stars': _stars, 'review': _review};
                   Navigator.of(context).pop(data);
