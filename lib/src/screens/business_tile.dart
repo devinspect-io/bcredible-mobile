@@ -87,7 +87,7 @@ class BusinessTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    "Total Reviews: 10",
+                    "Total Reviews ${business.totalRatings}",
                     style: TextStyle(
                       color: Color.fromRGBO(10,10,0,100),
                       fontWeight: FontWeight.bold,
@@ -96,7 +96,7 @@ class BusinessTile extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   Container(
-                    child: _buildRatingStars(2)
+                    child: _buildRatingStars(business.avgRating)
                   ),
                 ]
               ),
