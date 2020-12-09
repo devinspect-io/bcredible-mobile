@@ -68,4 +68,28 @@ class ApiProvider {
       return false;
     }
   }
+
+  Future<bool> createRating(
+      int stars, String review, String userId, String businessId) async {
+    final _url = _baseUrl + "/rating";
+    Map data = {
+      'user': userId,
+      'business': businessId,
+      'comment': review,
+      'rating': stars,
+    };
+    print(data);
+    var body = json.encode(data);
+    final response = await client.post("$_url",
+        headers: {"Content-Type": "application/json"},
+        body: body); // Make the network call asynchronously to fetch the data.
+    print(response.statusCode);
+    print(response);
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      return true;
+      // return json.decode(response.body); //Return decoded response
+    } else {
+      return false;
+    }
+  }
 }

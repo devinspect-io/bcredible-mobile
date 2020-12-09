@@ -1,9 +1,10 @@
+import 'package:bcredible/src/screens/rating_dialog_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:toast/toast.dart';
 import '../models/business.dart';
 import './image_container.dart';
-// import '../blocs/bloc_provider.dart';
-// import 'package:restaurant_finder/bloc/favorite_bloc.dart';
+import '../blocs/business_bloc.dart';
 
 class BusinessDetailsScreen extends StatelessWidget {
   final Business business;
@@ -14,43 +15,48 @@ class BusinessDetailsScreen extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(business.name),
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          _addTopMargin(10),
-          _buildBanner(),
-          Padding(
-            padding: const EdgeInsets.only(top: 8),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                _addTopMargin(5),
-                Text(
-                  business.name,
-                  style: textTheme.subtitle.copyWith(fontSize: 20),
+        appBar: AppBar(
+          title: Text(business.name),
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              _addTopMargin(15),
+              _buildBanner(),
+              Padding(
+                padding: const EdgeInsets.only(left: 10, top: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    _addTopMargin(5),
+                    Text(
+                      business.name + '\t',
+                      style: textTheme.subtitle.copyWith(fontSize: 20),
+                    ),
+                    _buildRatingStars(business.avgRating),
+                  ],
                 ),
-                Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: <Widget>[
-                      _buildRatingStars(business.avgRating),
-                    ])
-              ],
-            ),
+              ),
+              // Column (
+              // ),
+              _buildDetails(context),
+              _divider(),
+              // Divider(
+              //   color: Colors.black,
+              // ),
+              _buildAddReviewButton(context),
+            ],
           ),
-          // Column (
-          // ),
-          _buildDetails(context),
-          Divider(
-            color: Colors.black,
-          ),
-          _buildAddReviewButton(context),
-        ],
+        ));
+  }
+
+  _divider() {
+    return Row(children: <Widget>[
+      Expanded(
+        child: Container(width: 90, child: Divider()),
       ),
-    );
+    ]);
   }
 
   Widget _buildBanner() {
@@ -67,29 +73,23 @@ class BusinessDetailsScreen extends StatelessWidget {
   }
 
   Widget _buildRatingStars(double rating) {
-    print(rating);
-    return RatingBar.builder(
-      initialRating: rating,
-      minRating: 0,
-      itemSize: 18,
-      direction: Axis.horizontal,
-      allowHalfRating: true,
-      itemCount: 5,
-      itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
-      itemBuilder: (context, _) => Icon(
+    return RatingBarIndicator(
+      rating: rating,
+      itemBuilder: (context, index) => Icon(
         Icons.star,
         color: Colors.amber,
       ),
-      onRatingUpdate: (rating) {
-        print(rating);
-      },
+      itemCount: 5,
+      itemSize: 20,
+      itemPadding: EdgeInsets.symmetric(horizontal: 0.2),
+      direction: Axis.horizontal,
     );
   }
 
   Widget _buildDetails(BuildContext context) {
     final style = TextStyle(fontSize: 13);
     return Container(
-      padding: EdgeInsets.only(left: 6),
+      padding: EdgeInsets.only(left: 10, top: 10),
       child: new Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
@@ -103,7 +103,7 @@ class BusinessDetailsScreen extends StatelessWidget {
               ),
               children: <TextSpan>[
                 new TextSpan(
-                    text: ' Address: ',
+                    text: '\nAddress: ',
                     style: new TextStyle(
                         fontWeight: FontWeight.bold, fontSize: 13)),
                 new TextSpan(
@@ -148,18 +148,21 @@ class BusinessDetailsScreen extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.1),
                     side: BorderSide(color: Color.fromRGBO(0, 186, 168, 1))),
-                onPressed: () {
-                  // if (_selectedLocation != 'Please choose a location' &&
-                  //     _selectedLocation != '') {
-                  //   print('button pressed');
-                  //   Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(builder: (context) => ListViewScreen()),
-                  //   );
-                  // }
+                onPressed: () async {
+                  var results = await showDialog(
+                      context: context, builder: (_) => RatingDialog());
+                  final resp = await businessBloc.submitRating(
+                      results['stars'],
+                      results['review'],
+                      '5fd08f99a8ea89477a623983',
+                      business.Id);
+                  if (resp) {
+                    Toast.show("Thank you!", context,
+                        duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+                  }
                 },
                 child: const Text('Add Review',
-                    style: TextStyle(fontSize: 22, color: Colors.white)),
+                    style: TextStyle(fontSize: 14, color: Colors.white)),
               ),
             ),
           ]),
