@@ -10,9 +10,9 @@ class Bloc extends Object with Validators {
   //Add data to stream
   Stream<String> get email => _email.stream.transform(validateEmail);
   Stream<String> get password => _password.stream.transform(validatePassword);
-
-  //combine both stream using observable 
-  Stream<bool> get submitValid => Rx.combineLatest2(email, password, (e,p) => true);
+  //combine both stream using observable
+  Stream<bool> get submitValid =>
+      Rx.combineLatest2(email, password, (e, p) => true);
 
   //Change data
   Function(String) get changeEmail => _email.sink.add;
@@ -29,5 +29,4 @@ class Bloc extends Object with Validators {
     _email.close();
     _password.close();
   }
-  
 }

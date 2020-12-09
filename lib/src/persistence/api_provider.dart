@@ -27,6 +27,21 @@ class ApiProvider {
     }
   }
 
+  Future<List<Business>> search(String query) async {
+    final _url = _baseUrl + "/search/" + query;
+    print("baseUrl $_url");
+    final response = await client.get(
+        "$_url"); // Make the network call asynchronously to fetch the data.
+    print(response.body.toString());
+    if (response.statusCode == 200 && response.body != null) {
+      return (json.decode(response.body)['businesses'] as List)
+          .map((i) => Business.fromJson(i))
+          .toList(); //Return decoded response
+    } else {
+      throw Exception('Failed to load Data');
+    }
+  }
+
   Future<bool> singInUser(String email, String password) async {
     final _url = _baseUrl + "/login";
     print("baseUrl $_url $email $password");

@@ -14,4 +14,5 @@ class Repository {
   Future<bool> createRating(
           int stars, String review, String userId, String businessId) =>
       appApiProvider.createRating(stars, review, userId, businessId);
+  Future<List<Business>> search(String query) => appApiProvider.search(query);
 }

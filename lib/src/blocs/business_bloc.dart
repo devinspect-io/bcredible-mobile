@@ -12,7 +12,7 @@ class BusinessBloc {
   final _businessFetcher = PublishSubject<List<Business>>();
 
   //This method is used to pass the response as stream to UI
-  Stream<List<Business>> get result => _businessFetcher.stream;
+  Stream<List<Business>> get businessStream => _businessFetcher.stream;
 
   fetchBusinesses(String city) async {
     List<Business> businessResponse = await _repository.fetchBusinesses(city);
@@ -23,6 +23,11 @@ class BusinessBloc {
     final resp =
         await _repository.createRating(stars, review, userId, businessId);
     return resp;
+  }
+
+  submitQuery(query) async {
+    List<Business> businessResponse = await _repository.search(query);
+    _businessFetcher.sink.add(businessResponse);
   }
 
   dispose() {
