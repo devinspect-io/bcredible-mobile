@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/business.dart';
 import './business_detail_view_screeen.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class BusinessTile extends StatelessWidget {
   final Business business;
@@ -41,7 +42,7 @@ class BusinessTile extends StatelessWidget {
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
-                      fontSize: 20.0
+                      fontSize: 18.0
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -65,6 +66,7 @@ class BusinessTile extends StatelessWidget {
                   ),
                 ]
               ),
+              _addTopMargin(3),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -79,7 +81,37 @@ class BusinessTile extends StatelessWidget {
                   ),
                 ]
               ),
-              _addTopMargin(30),
+              _addTopMargin(5),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "Total Reviews: 10",
+                    style: TextStyle(
+                      color: Color.fromRGBO(10,10,0,100),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14.0
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.only(
+                      left: 10, top: 2, right: 10, bottom: 2
+                    ),
+                    decoration: const BoxDecoration(
+                      color: Color.fromRGBO(224, 224, 224, 100),
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(4),
+                        topRight: Radius.circular(4),
+                        bottomLeft: Radius.circular(4),
+                        bottomRight: Radius.circular(4)
+                      ),
+                    ),
+                    child: _buildRatingStars(2)
+                  ),
+                ]
+              )
             ])
           ),
         ],
@@ -97,5 +129,23 @@ class BusinessTile extends StatelessWidget {
 
   Container _addTopMargin(double x) {
     return Container(height: x);
+  }
+
+  Widget _buildRatingStars(double rating) {
+    return RatingBar.builder(
+      initialRating: rating,
+      minRating: 0,
+      direction: Axis.horizontal,
+      allowHalfRating: true,
+      itemCount: 5,
+      itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
+      itemBuilder: (context, _) => Icon(
+        Icons.star,
+        color: Colors.amber,
+      ),
+      onRatingUpdate: (rating) {
+        print(rating);
+      },
+    );
   }
 }
