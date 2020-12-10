@@ -7,6 +7,7 @@ import './list_view.dart';
 import 'package:toast/toast.dart';
 import '../models/business.dart';
 import './image_container.dart';
+import './image_container_round.dart';
 import '../blocs/business_bloc.dart';
 
 class BusinessDetailsScreen extends StatefulWidget {
@@ -85,6 +86,7 @@ class BusinessDetailsScreenState extends State<BusinessDetailsScreen>  {
                   //   color: Colors.black,
                   // ),
                   _buildAddReviewButton(context),
+                  _buildReviews(snapshot.data),
                 ],
               ),
             ));
@@ -111,6 +113,15 @@ class BusinessDetailsScreenState extends State<BusinessDetailsScreen>  {
       url: business.imageUrl != null
           ? business.imageUrl
           : "https://picsum.photos/${randomNumber}",
+    );
+  }
+
+  Widget _buildAvatar() {
+    Random random = new Random();
+    int randomNumber = random.nextInt(90) + 200; // from 10 upto 99 included
+    return CircleAvatar(
+      radius: 30,
+      backgroundImage: NetworkImage("https://picsum.photos/${randomNumber}")
     );
   }
 
@@ -196,12 +207,19 @@ class BusinessDetailsScreenState extends State<BusinessDetailsScreen>  {
     return Visibility(
       maintainState: true,
       maintainAnimation: true,
-      child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 10, top: 10, right: 10, bottom: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Text(
+              "Reviews",
+              style: TextStyle( fontWeight: FontWeight.bold,  fontSize: 20),
+            ),
             SizedBox(
-              width: MediaQuery.of(context).size.width * 0.8,
+              width: MediaQuery.of(context).size.width * 0.4,
+              height: 30,
               child: RaisedButton(
                 color: Color.fromRGBO(0, 186, 168, 1),
                 shape: RoundedRectangleBorder(
@@ -236,8 +254,76 @@ class BusinessDetailsScreenState extends State<BusinessDetailsScreen>  {
                     style: TextStyle(fontSize: 14, color: Colors.white)),
               ),
             ),
-          ]),
+          ]
+        ),
+      )
     );
+  }
+
+  Widget _buildReviews(Business business) {
+    return Column(
+      children: <Widget>[
+        ...business.ratings.map((item) {
+          return  Column (
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(left: 10, top: 10, right: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    _buildAvatar(),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10, top: 0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            "\t${item['user_name']}",
+                            style: TextStyle( fontWeight: FontWeight.bold,  fontSize: 14),
+                          ),
+                          _buildReviewRatingStars(item['rating']),
+                          Text(
+                            "\t${item['comment']}",
+                            style: TextStyle( fontWeight: FontWeight.normal, fontSize: 14,  color: Color.fromRGBO(43, 43, 43, 100)),
+                          ),
+                        ]
+                      )
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          );
+        }).toList(),
+      ],
+    );
+  }
+
+  static double checkDouble(dynamic value) {
+    if (value is String) {
+      return double.parse(value);
+    } else if (value is int) {
+      return 0.0 + value;
+    } else {
+      return value;
+    }
+  }
+
+
+  Widget _buildReviewRatingStars(int rating) {
+    return RatingBarIndicator(
+      rating: checkDouble(rating),
+      itemBuilder: (context, index) => Icon(
+        Icons.star,
+        color: Colors.amber,
+      ),
+      itemCount: 5,
+      itemSize: 15,
+      itemPadding: EdgeInsets.symmetric(horizontal: 0.1),
+      direction: Axis.horizontal,
+    );
+    // return RatingBarIndicator.builder(
   }
 
   // Widget _buildFavoriteButton(BuildContext context) {
