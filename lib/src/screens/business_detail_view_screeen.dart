@@ -17,8 +17,8 @@ class BusinessDetailsScreen extends StatefulWidget {
 
   @override
   BusinessDetailsScreenState createState() =>
-      BusinessDetailsScreenState(business);
-}
+    BusinessDetailsScreenState(business);
+  }
 
 class BusinessDetailsScreenState extends State<BusinessDetailsScreen> {
   Business parentBusiness;

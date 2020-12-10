@@ -1,4 +1,3 @@
-import 'package:bcredible/src/blocs/login_bloc.dart';
 import 'package:flutter/material.dart';
 import './list_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -113,7 +112,7 @@ class HomeScreenState extends State<HomeScreen> {
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                          ListViewScreen(locationCity: _selectedLocation)),
+                              ListViewScreen(locationCity: _selectedLocation)),
                     );
                   }
                 },
