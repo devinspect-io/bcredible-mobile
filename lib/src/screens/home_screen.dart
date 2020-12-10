@@ -25,8 +25,8 @@ class HomeScreenState extends State<HomeScreen> {
         title: 'Sign in',
         home: Scaffold(
           appBar: AppBar(
-            title: Text('bCredible'),
-            backgroundColor: Color.fromRGBO(0, 209, 189, 100)),
+              title: Text('bCredible'),
+              backgroundColor: Color.fromRGBO(0, 209, 189, 100)),
           body: _buildHomeScreen(),
         ),
       ),
@@ -35,7 +35,7 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   SingleChildScrollView _buildHomeScreen() {
-    return SingleChildScrollView( 
+    return SingleChildScrollView(
       child: Container(
         padding: const EdgeInsets.all(17.0),
         margin: const EdgeInsets.only(top: 50.0),
@@ -52,7 +52,7 @@ class HomeScreenState extends State<HomeScreen> {
 
   Container _buildGettingStarted() {
     return Container(
-      child: Column(children: <Widget>[
+        child: Column(children: <Widget>[
       Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -120,10 +120,12 @@ class HomeScreenState extends State<HomeScreen> {
                 onPressed: () {
                   if (_selectedLocation != 'Please choose a location' &&
                       _selectedLocation != '') {
-                    // print('button pressed');
+                    print('button pressed $_selectedLocation');
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => ListViewScreen(locationCity: _selectedLocation)),
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              ListViewScreen(locationCity: _selectedLocation)),
                     );
                   }
                 },
