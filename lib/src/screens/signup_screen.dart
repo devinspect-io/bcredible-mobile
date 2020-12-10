@@ -236,7 +236,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                                                 title: Text('bCredible'),
                                                 backgroundColor:
                                                     Color.fromRGBO(0, 209, 189, 100)),
-                                            body: HomeScreen()),
+                                            body: LoginScreen()),
                                       ),
                                     )
                               )

@@ -4,7 +4,6 @@ import 'package:bcredible/src/blocs/login_bloc.dart';
 import 'package:bcredible/src/screens/rating_dialog_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import './list_view.dart';
 import 'package:toast/toast.dart';
 import '../models/business.dart';
 import './image_container.dart';
@@ -17,99 +16,152 @@ class BusinessDetailsScreen extends StatefulWidget {
   BusinessDetailsScreen({Key key, @required this.business}) : super(key: key);
 
   @override
-  BusinessDetailsScreenState createState() => BusinessDetailsScreenState(business);
+  BusinessDetailsScreenState createState() =>
+      BusinessDetailsScreenState(business);
 }
 
-class BusinessDetailsScreenState extends State<BusinessDetailsScreen>  {
+class BusinessDetailsScreenState extends State<BusinessDetailsScreen> {
+  Business parentBusiness;
   Business business;
-  Business businessNew;
-  BusinessDetailsScreenState(this.business);
+  BusinessDetailsScreenState(this.parentBusiness);
+  bool isLoading = true;
+
+  Future<void> getBussiness() async {
+    businessBloc.fetchBusiness(parentBusiness.Id).then((results) => {
+      setState(() {
+        business = results;
+        isLoading = false;
+      }),
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      isLoading = true;
+    });
+    print('init');
+    getBussiness();
+  }
 
   @override
   Widget build(BuildContext context) {
-    businessBloc.fetchBusiness(business.Id);
-    return StreamBuilder(
-      stream: businessBloc.resultb,
-      builder: (context, AsyncSnapshot<Business> snapshot) {
-        if (!snapshot.hasData) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-        if (snapshot.hasData) {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(snapshot.data.name),
-               actions: <Widget>[
-                IconButton(
-                  icon: Icon(
-                    Icons.logout,
-                    color: Colors.white,
-                    size: 20.0,
-                  ),
-                  onPressed: () {
-                    _logout();
-                  },
-                ),
-              ]
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'DetailView',
+      theme: ThemeData(
+        primarySwatch: Colors.teal,
+      ),
+      home: Scaffold(
+      appBar: AppBar(
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(
+              Icons.logout,
+              color: Colors.white,
+              size: 20.0,
             ),
-            body: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  _addTopMargin(1),
-                  _buildBanner(context, snapshot.data.imageUrl),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10, top: 10, right: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          snapshot.data.name,
-                          style: TextStyle( fontWeight: FontWeight.bold, fontSize: 24),
-                        ),
-                        _buildRatingStars(snapshot.data.avgRating, snapshot.data.totalRatings),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10, top: 10, right: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Container (
-                          width: MediaQuery.of(context).size.width*0.8,
-                          child: new Column (
-                            children: <Widget>[
-                              new Text ( snapshot.data.description != null
-                                ? snapshot.data.description
-                                : "Lorem Ipsum shop dealer sells Fish", textAlign: TextAlign.left,
-                                style: TextStyle( fontWeight: FontWeight.normal, fontSize: 16, color: Color.fromRGBO(43, 43, 43, 100)),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  // Column (
-                  // ),
-                  _buildDetails(context),
-                  _divider(),
-                  // Divider(
-                  //   color: Colors.black,
-                  // ),
-                  _buildAddReviewButton(context),
-                  _buildReviews(snapshot.data),
-                ],
+            onPressed: () {
+              _logout();
+            },
+          )
+        ],
+        title: Row(
+          children: <Widget>[
+            IconButton(
+              icon: Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+                size: 20.0,
               ),
-            ));
-        } else if (snapshot.hasError) {
-          return Text(snapshot.error.toString());
-        }
-        return Center(child: CircularProgressIndicator());
-      });
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+            ),
+           
+          ],
+        ),
+      ),
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: () async {
+                getBussiness();
+              },
+              child: isLoading
+                  ? Center(child: CircularProgressIndicator())
+                  : _buildMainView(business),
+            )
+          ),
+        ]),
+      )
+    );
   }
+
+   Widget _buildMainView(Business business) {
+    print("got into busss ${business.name}");
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          _addTopMargin(1),
+          _buildBanner(context, business.imageUrl),
+          Padding(
+            padding:
+                const EdgeInsets.only(left: 10, top: 10, right: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  business.name,
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 24),
+                ),
+                _buildRatingStars(business.avgRating,
+                    business.totalRatings),
+              ],
+            ),
+          ),
+          Padding(
+            padding:
+                const EdgeInsets.only(left: 10, top: 10, right: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: new Column(
+                    children: <Widget>[
+                      new Text(
+                        business.description != null
+                            ? business.description
+                            : "Lorem Ipsum shop dealer sells Fish",
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            fontSize: 16,
+                            color: Color.fromRGBO(43, 43, 43, 100)),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Column (
+          // ),
+          _buildDetails(context),
+          _divider(),
+          _buildAddReviewButton(context),
+          _buildReviews(business),
+        ],
+      ),
+    );
+  }
+
+
 
   _divider() {
     return Row(children: <Widget>[
@@ -126,17 +178,17 @@ class BusinessDetailsScreenState extends State<BusinessDetailsScreen>  {
       height: 200,
       url: business.imageUrl != null
           ? business.imageUrl
-          : "https://picsum.photos/${randomNumber}",
+          : "https://picsum.photos/$randomNumber",
     );
   }
 
   Widget _buildAvatar() {
     Random random = new Random();
     int randomNumber = random.nextInt(200) + 200; // from 10 upto 99 included
+    print(randomNumber);
     return CircleAvatar(
-      radius: 30,
-      backgroundImage: NetworkImage("https://picsum.photos/${randomNumber}")
-    );
+        radius: 30,
+        backgroundImage: NetworkImage("https://picsum.photos/$randomNumber"));
   }
 
   Container _addTopMargin(double x) {
@@ -148,8 +200,8 @@ class BusinessDetailsScreenState extends State<BusinessDetailsScreen>  {
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
         Text(
-          "${rating}",
-          style: TextStyle( fontWeight: FontWeight.bold, fontSize: 20),
+          "$rating",
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
         ),
         RatingBarIndicator(
           rating: rating,
@@ -163,8 +215,8 @@ class BusinessDetailsScreenState extends State<BusinessDetailsScreen>  {
           direction: Axis.horizontal,
         ),
         Text(
-          "${reviewCount} reviews",
-          style: TextStyle( fontWeight: FontWeight.normal, fontSize: 14),
+          "$reviewCount reviews",
+          style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14),
         ),
       ],
     );
@@ -217,6 +269,13 @@ class BusinessDetailsScreenState extends State<BusinessDetailsScreen>  {
     );
   }
 
+  _getUserID() async {
+    final prefs = await SharedPreferences.getInstance();
+    final key = 'userID';
+    final value = prefs.getString(key) ?? null;
+    return value;
+  }
+
   Widget _buildAddReviewButton(context) {
     return Visibility(
       maintainState: true,
@@ -242,32 +301,36 @@ class BusinessDetailsScreenState extends State<BusinessDetailsScreen>  {
                 onPressed: () async {
                   String userID = await _getUserID();
                   if (userID != null) {
+                    print("userID");
                     print(userID);
-                    // var results = await showDialog(
-                    //     context: context, builder: (_) => RatingDialog());
-                    // if (results != null) {
-                    //   final resp = await businessBloc.submitRating(
-                    //     results['stars'],
-                    //     results['review'],
-                    //     userID,
-                    //     business.Id);
-                    //   if (resp) {
-                    //     Toast.show("Thank you!", context,
-                    //         duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
-                    //     setState(() {});
+                    var results = await showDialog(
+                        context: context, builder: (_) => RatingDialog());
+                    if (results != null) {
+                      final resp = await businessBloc.submitRating(
+                        results['stars'],
+                        results['review'],
+                        userID,
+                        business.Id);
+                      if (resp) {
+                        Toast.show("Thank you!", context,
+                            duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+                        getBussiness();
 
-                    //     // business.avgRating = business.avgRating * business.totalRatings + results['stars'] /
-                    //     // Navigator.of(context).popUntil(Modal);
-                    //     // Navigator.push(
-                    //     //   context,
-                    //     //   MaterialPageRoute(
-                    //     //       builder: (context) =>
-                    //     //           ListViewScreen(locationCity: 'islamabad')),
-                    //     // );
-                    //   }
-                    // }
+                        // business.avgRating = business.avgRating * business.totalRatings + results['stars'] /
+                        // Navigator.of(context).popUntil(Modal);
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //       builder: (context) =>
+                        //           ListViewScreen(locationCity: 'islamabad')),
+                        // );
+                      }
+                    }
                   } else {
-                    print("Please logg innn");
+                    Toast.show("Please login to give review", context,
+                      duration: Toast.LENGTH_LONG,
+                      gravity: Toast.BOTTOM);
+                    _logout();
                   }
                 },
                 child: const Text('Add Review',
@@ -280,18 +343,13 @@ class BusinessDetailsScreenState extends State<BusinessDetailsScreen>  {
     );
   }
 
-  _getUserID() async {
-    final prefs = await SharedPreferences.getInstance();
-    final key = 'userID';
-    final value = prefs.getString(key) ?? null;
-    return value;
-  }
+  
 
   Widget _buildReviews(Business business) {
     return Column(
       children: <Widget>[
         ...business.ratings.map((item) {
-          return  Column (
+          return Column(
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(left: 10, top: 10, right: 10),
@@ -300,23 +358,25 @@ class BusinessDetailsScreenState extends State<BusinessDetailsScreen>  {
                   children: <Widget>[
                     _buildAvatar(),
                     Padding(
-                      padding: const EdgeInsets.only(left: 10, top: 0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            "\t${item['user_name']}",
-                            style: TextStyle( fontWeight: FontWeight.bold,  fontSize: 14),
-                          ),
-                          _buildReviewRatingStars(item['rating']),
-                          Text(
-                            "\t${item['comment']}",
-                            style: TextStyle( fontWeight: FontWeight.normal, fontSize: 14,  color: Color.fromRGBO(43, 43, 43, 100)),
-                          ),
-                        ]
-                      )
-                    ),
+                        padding: const EdgeInsets.only(left: 10, top: 0),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                "\t${item['user_name']}",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 14),
+                              ),
+                              _buildReviewRatingStars(item['rating']),
+                              Text(
+                                "\t${item['comment']}",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 14,
+                                    color: Color.fromRGBO(43, 43, 43, 100)),
+                              ),
+                            ])),
                   ],
                 ),
               ),
@@ -336,7 +396,6 @@ class BusinessDetailsScreenState extends State<BusinessDetailsScreen>  {
       return value;
     }
   }
-
 
   Widget _buildReviewRatingStars(int rating) {
     return RatingBarIndicator(

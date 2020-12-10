@@ -10,11 +10,9 @@ class BusinessBloc {
   // Create a PublicSubject object responsible to add the data which is got from
   // the server in the form of Report object and pass it to the UI screen as a stream.
   final _businessesFetcher = PublishSubject<List<Business>>();
-  final _businessFetcher = PublishSubject<Business>();
 
   //This method is used to pass the response as stream to UI
   Stream<List<Business>> get result => _businessesFetcher.stream;
-  Stream<Business> get resultb => _businessFetcher.stream;
 
   fetchBusinesses(String city) async {
     List<Business> businessResponse = await _repository.fetchBusinesses(city);
@@ -23,7 +21,13 @@ class BusinessBloc {
 
   fetchBusiness(String id) async {
     Business businessResponse = await _repository.fetchBusiness(id);
-    _businessFetcher.sink.add(businessResponse);
+    return businessResponse;
+  }
+
+  fetchBusinessDirectly(String city) async {
+    print('called $city');
+    final parsed = await _repository.fetchBusinesses(city);
+    return parsed;
   }
 
   submitRating(stars, review, userId, businessId) async {
@@ -34,7 +38,6 @@ class BusinessBloc {
 
   dispose() {
     _businessesFetcher.close();
-    _businessFetcher.close();
   }
 }
 

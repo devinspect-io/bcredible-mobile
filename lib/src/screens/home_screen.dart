@@ -9,7 +9,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen> {
-  bool _showInfo = false;
   String _selectedLocation = 'Please choose a location';
   List<String> _locations = [
     'Please choose a location',
@@ -24,7 +23,7 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   SingleChildScrollView _buildHomeScreen() {
-    return SingleChildScrollView( 
+    return SingleChildScrollView(
       child: Container(
         padding: const EdgeInsets.all(17.0),
         margin: const EdgeInsets.only(top: 50.0),
@@ -41,7 +40,7 @@ class HomeScreenState extends State<HomeScreen> {
 
   Container _buildGettingStarted() {
     return Container(
-      child: Column(children: <Widget>[
+        child: Column(children: <Widget>[
       Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -112,7 +111,9 @@ class HomeScreenState extends State<HomeScreen> {
                     // print('button pressed');
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => ListViewScreen(locationCity: _selectedLocation)),
+                      MaterialPageRoute(
+                          builder: (context) =>
+                          ListViewScreen(locationCity: _selectedLocation)),
                     );
                   }
                 },

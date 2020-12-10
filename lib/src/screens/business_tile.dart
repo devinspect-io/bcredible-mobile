@@ -114,7 +114,8 @@ class BusinessTile extends StatelessWidget {
         ],
       ),
       onTap: () {
-        Navigator.of(context).push(
+        Navigator.push(
+          context,
           MaterialPageRoute(
             builder: (context) => BusinessDetailsScreen(business: business),
           ),
@@ -122,7 +123,6 @@ class BusinessTile extends StatelessWidget {
         // print("tapped on container");
       },
     );
-    ;
   }
 
   String getRepresentableDesc(String desc) {
