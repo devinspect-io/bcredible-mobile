@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' show Client;
 import '../models/business.dart';
-import '../models/user.dart';
 
 class ApiProvider {
   Client client = Client();

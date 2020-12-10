@@ -1,7 +1,5 @@
-import 'dart:convert';
-import 'package:flutter/foundation.dart';
-
 class Business {
+  // ignore: non_constant_identifier_names
   String Id;
   double avgRating;
   List<String> categories;

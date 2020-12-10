@@ -26,6 +26,12 @@ class BusinessBloc {
     _businessFetcher.sink.add(businessResponse);
   }
 
+  fetchBusinessDirectly(String city) async {
+    print('called $city');
+    final parsed = await _repository.fetchBusinesses(city);
+    return parsed;
+  }
+
   submitRating(stars, review, userId, businessId) async {
     final resp =
         await _repository.createRating(stars, review, userId, businessId);
