@@ -16,15 +16,21 @@ class ListScreenState extends State<ListViewScreen> {
   ListScreenState(this.locationCity);
   List<Business> businesss = new List<Business>();
   List<Business> filtered = List<Business>();
+  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
+    setState(() {
+      isLoading = true;
+    });
     print('init $locationCity');
     businessBloc.fetchBusinessDirectly(locationCity).then((results) => {
           setState(() {
             businesss = results;
             filtered = results;
+            isLoading = false;
+            ;
           })
         });
   }
@@ -54,7 +60,6 @@ class ListScreenState extends State<ListViewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(filtered.toString());
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'ListViews',
@@ -85,46 +90,9 @@ class ListScreenState extends State<ListViewScreen> {
                   ),
                 ),
                 Expanded(
-                  child: _buildSearchResults(filtered),
-                ),
-              ],
-            ),
-          ),
-        ));
-  }
-
-  MaterialApp _buildListView(List<Business> data) {
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'ListViews',
-        theme: ThemeData(
-          primarySwatch: Colors.teal,
-        ),
-        home: Scaffold(
-          appBar: AppBar(
-              title: Text('bCredible'),
-              backgroundColor: Color.fromRGBO(0, 209, 189, 100)),
-          body: Container(
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: TextField(
-                    onChanged: (value) {
-                      filterSearchResults(value);
-                    },
-                    // controller: editingController,
-                    decoration: InputDecoration(
-                        labelText: "Search bussiness by name",
-                        hintText: "Search bussiness by name",
-                        prefixIcon: Icon(Icons.search),
-                        border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(15.0)))),
-                  ),
-                ),
-                Expanded(
-                  child: _buildSearchResults(data),
+                  child: isLoading
+                      ? Center(child: CircularProgressIndicator())
+                      : _buildSearchResults(filtered),
                 ),
               ],
             ),
