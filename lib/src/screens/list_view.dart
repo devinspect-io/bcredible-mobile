@@ -18,13 +18,7 @@ class ListScreenState extends State<ListViewScreen> {
   List<Business> filtered = List<Business>();
   bool isLoading = false;
 
-  @override
-  void initState() {
-    super.initState();
-    setState(() {
-      isLoading = true;
-    });
-    print('init $locationCity');
+  Future<void> getBussiness() async {
     businessBloc.fetchBusinessDirectly(locationCity).then((results) => {
           setState(() {
             businesss = results;
@@ -32,6 +26,16 @@ class ListScreenState extends State<ListViewScreen> {
           }),
           filtered.addAll(results)
         });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      isLoading = true;
+    });
+    print('init $locationCity');
+    getBussiness();
   }
 
   void filterSearchResults(String query) {
@@ -89,10 +93,14 @@ class ListScreenState extends State<ListViewScreen> {
                   ),
                 ),
                 Expanded(
+                    child: RefreshIndicator(
+                  onRefresh: () async {
+                    getBussiness();
+                  },
                   child: isLoading
                       ? Center(child: CircularProgressIndicator())
                       : _buildSearchResults(filtered),
-                ),
+                )),
               ],
             ),
           ),

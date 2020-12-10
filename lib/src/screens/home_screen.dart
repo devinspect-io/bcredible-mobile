@@ -9,7 +9,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen> {
-  bool _showInfo = false;
   String _selectedLocation = 'Please choose a location';
   List<String> _locations = [
     'Please choose a location',

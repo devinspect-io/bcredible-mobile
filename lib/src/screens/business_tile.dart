@@ -122,7 +122,6 @@ class BusinessTile extends StatelessWidget {
         // print("tapped on container");
       },
     );
-    ;
   }
 
   String getRepresentableDesc(String desc) {

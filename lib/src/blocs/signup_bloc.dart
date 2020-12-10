@@ -1,6 +1,5 @@
 import 'dart:async';
-import 'package:flutter/src/widgets/framework.dart';
-
+import 'package:flutter/cupertino.dart';
 import '../validators/validators.dart';
 import 'package:rxdart/rxdart.dart';
 import '../persistence/repository.dart';
@@ -39,7 +38,7 @@ class SignUpBloc extends Object with Validators {
     final validStreet = _street.value;
     final categories = ["food"];
     final resp = await _repository.createUser(
-      validName, validCity, validStreet, validEmail, validPass, categories);
+        validName, validCity, validStreet, validEmail, validPass, categories);
     return resp;
   }
 
