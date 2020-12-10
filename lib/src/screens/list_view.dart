@@ -28,10 +28,9 @@ class ListScreenState extends State<ListViewScreen> {
     businessBloc.fetchBusinessDirectly(locationCity).then((results) => {
           setState(() {
             businesss = results;
-            filtered = results;
             isLoading = false;
-            ;
-          })
+          }),
+          filtered.addAll(results)
         });
   }
 
