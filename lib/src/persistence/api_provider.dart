@@ -34,7 +34,7 @@ class ApiProvider {
     }
   }
 
-  Future<bool> singInUser(String email, String password) async {
+  Future<String> singInUser(String email, String password) async {
     final _url = _baseUrl + "/login";
     print("baseUrl $_url $email $password");
     Map data = {'email': email, 'password': password};
@@ -43,10 +43,11 @@ class ApiProvider {
         headers: {"Content-Type": "application/json"},
         body: body); // Make the network call asynchronously to fetch the data.
     print(response.statusCode);
+    print(response);
     if (response.statusCode == 200) {
-      return true;
+      return json.decode(response.body)['user_id'];
     } else {
-      return false;
+      return null;
     }
   }
 

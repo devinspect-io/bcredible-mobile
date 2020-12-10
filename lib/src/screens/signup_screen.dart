@@ -39,7 +39,8 @@ class SignUpScreenState extends State<SignUpScreen> {
               // checkBoxes(bloc),
               Container(margin: EdgeInsets.only(top: 25.0)),
               submitButton(bloc, context),
-              loginText(context)
+              loginText(context),
+              listPageLink(context),
             ],
           ),
         ));
@@ -223,10 +224,22 @@ class SignUpScreenState extends State<SignUpScreen> {
                         if (snapshot.hasData) {
                           final result = await bloc.submit();
                           if (result) {
-                            Navigator.push(
+                            Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => HomeScreen())
+                                builder: (context) => Provider(
+                                      child: MaterialApp(
+                                      debugShowCheckedModeBanner: false,
+                                        title: 'Sign Up',
+                                        home: Scaffold(
+                                            appBar: AppBar(
+                                                title: Text('bCredible'),
+                                                backgroundColor:
+                                                    Color.fromRGBO(0, 209, 189, 100)),
+                                            body: HomeScreen()),
+                                      ),
+                                    )
+                              )
                             );
                           } else {
                             Toast.show("Something went wrong", context,
@@ -268,7 +281,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                 fontSize: 14),
           ),
           onPressed: () {
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                 builder: (context) => Provider(
@@ -283,6 +296,45 @@ class SignUpScreenState extends State<SignUpScreen> {
                     ),
                   ),
                 )));
+          },
+        )
+      ],
+      mainAxisAlignment: MainAxisAlignment.center,
+    ));
+  }
+
+  Widget listPageLink(context) {
+    return Container(
+        child: Row(
+      children: <Widget>[
+        FlatButton(
+          textColor: Colors.blue,
+          child: Text(
+            'Continue As Guest',
+            style: TextStyle(
+                color: Color.fromRGBO(0, 0, 189, 100),
+                decoration: TextDecoration.underline,
+                fontWeight: FontWeight.w500,
+                fontSize: 14),
+          ),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Provider(
+                      child: MaterialApp(
+                      debugShowCheckedModeBanner: false,
+                        title: 'Sign Up',
+                        home: Scaffold(
+                            appBar: AppBar(
+                                title: Text('bCredible'),
+                                backgroundColor:
+                                    Color.fromRGBO(0, 209, 189, 100)),
+                            body: HomeScreen()),
+                      ),
+                    )
+              )
+            );
           },
         )
       ],

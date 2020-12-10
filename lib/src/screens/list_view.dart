@@ -1,7 +1,10 @@
+import 'package:bcredible/src/blocs/login_bloc.dart';
 import 'package:flutter/material.dart';
 import '../models/business.dart';
 import './business_tile.dart';
 import '../blocs/business_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import './login_screen.dart';
 
 class ListViewScreen extends StatefulWidget {
   final String locationCity;
@@ -18,6 +21,7 @@ class ListScreenState extends State<ListViewScreen> {
   @override
   Widget build(BuildContext context) {
     businessBloc.fetchBusinesses(locationCity);
+    // _read();
     return StreamBuilder(
       stream: businessBloc.result,
       builder: (context, AsyncSnapshot<List<Business>> snapshot) {
@@ -43,7 +47,22 @@ class ListScreenState extends State<ListViewScreen> {
         primarySwatch: Colors.teal,
       ),
       home: Scaffold(
-        appBar: AppBar(title: Text('bCredible'), backgroundColor: Color.fromRGBO(0, 209, 189, 100)),
+        appBar: AppBar(
+          title: Text('bCredible'),
+          backgroundColor: Color.fromRGBO(0, 209, 189, 100),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(
+                Icons.logout,
+                color: Colors.white,
+                size: 20.0,
+              ),
+              onPressed: () {
+                _logout();
+              },
+            ),
+          ]
+        ),
         body: _buildSearchResults(data),
       ),
     );
@@ -67,6 +86,34 @@ class ListScreenState extends State<ListViewScreen> {
           ),
         );
       },
+    );
+  }
+
+  _read() async {
+    final prefs = await SharedPreferences.getInstance();
+    final key = 'userID';
+    final value = prefs.getString(key) ?? null;
+    print('read userID: $value');
+  }
+
+  _logout() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('userID');
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+      builder: (context) => Provider(
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Sign in',
+          home: Scaffold(
+            appBar: AppBar(
+              title: Text('bCredible'),
+              backgroundColor: Color.fromRGBO(0, 209, 189, 100)),
+            body: LoginScreen(),
+          ),
+        ),
+      ))
     );
   }
 

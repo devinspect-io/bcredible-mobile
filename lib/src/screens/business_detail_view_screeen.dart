@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:bcredible/src/blocs/login_bloc.dart';
 import 'package:bcredible/src/screens/rating_dialog_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -7,8 +8,9 @@ import './list_view.dart';
 import 'package:toast/toast.dart';
 import '../models/business.dart';
 import './image_container.dart';
-import './image_container_round.dart';
 import '../blocs/business_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import './login_screen.dart';
 
 class BusinessDetailsScreen extends StatefulWidget {
   final Business business;
@@ -38,6 +40,18 @@ class BusinessDetailsScreenState extends State<BusinessDetailsScreen>  {
           return Scaffold(
             appBar: AppBar(
               title: Text(snapshot.data.name),
+               actions: <Widget>[
+                IconButton(
+                  icon: Icon(
+                    Icons.logout,
+                    color: Colors.white,
+                    size: 20.0,
+                  ),
+                  onPressed: () {
+                    _logout();
+                  },
+                ),
+              ]
             ),
             body: SingleChildScrollView(
               child: Column(
@@ -118,7 +132,7 @@ class BusinessDetailsScreenState extends State<BusinessDetailsScreen>  {
 
   Widget _buildAvatar() {
     Random random = new Random();
-    int randomNumber = random.nextInt(90) + 200; // from 10 upto 99 included
+    int randomNumber = random.nextInt(200) + 200; // from 10 upto 99 included
     return CircleAvatar(
       radius: 30,
       backgroundImage: NetworkImage("https://picsum.photos/${randomNumber}")
@@ -226,28 +240,34 @@ class BusinessDetailsScreenState extends State<BusinessDetailsScreen>  {
                     borderRadius: BorderRadius.circular(10.1),
                     side: BorderSide(color: Color.fromRGBO(0, 186, 168, 1))),
                 onPressed: () async {
-                  var results = await showDialog(
-                      context: context, builder: (_) => RatingDialog());
-                  if (results != null) {
-                    final resp = await businessBloc.submitRating(
-                      results['stars'],
-                      results['review'],
-                      '5fd08b61a8ea89477a623982',
-                      business.Id);
-                    if (resp) {
-                      Toast.show("Thank you!", context,
-                          duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
-                      setState(() {});
+                  String userID = await _getUserID();
+                  if (userID != null) {
+                    print(userID);
+                    // var results = await showDialog(
+                    //     context: context, builder: (_) => RatingDialog());
+                    // if (results != null) {
+                    //   final resp = await businessBloc.submitRating(
+                    //     results['stars'],
+                    //     results['review'],
+                    //     userID,
+                    //     business.Id);
+                    //   if (resp) {
+                    //     Toast.show("Thank you!", context,
+                    //         duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+                    //     setState(() {});
 
-                      // business.avgRating = business.avgRating * business.totalRatings + results['stars'] /
-                      // Navigator.of(context).popUntil(Modal);
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //       builder: (context) =>
-                      //           ListViewScreen(locationCity: 'islamabad')),
-                      // );
-                    }
+                    //     // business.avgRating = business.avgRating * business.totalRatings + results['stars'] /
+                    //     // Navigator.of(context).popUntil(Modal);
+                    //     // Navigator.push(
+                    //     //   context,
+                    //     //   MaterialPageRoute(
+                    //     //       builder: (context) =>
+                    //     //           ListViewScreen(locationCity: 'islamabad')),
+                    //     // );
+                    //   }
+                    // }
+                  } else {
+                    print("Please logg innn");
                   }
                 },
                 child: const Text('Add Review',
@@ -258,6 +278,13 @@ class BusinessDetailsScreenState extends State<BusinessDetailsScreen>  {
         ),
       )
     );
+  }
+
+  _getUserID() async {
+    final prefs = await SharedPreferences.getInstance();
+    final key = 'userID';
+    final value = prefs.getString(key) ?? null;
+    return value;
   }
 
   Widget _buildReviews(Business business) {
@@ -324,6 +351,27 @@ class BusinessDetailsScreenState extends State<BusinessDetailsScreen>  {
       direction: Axis.horizontal,
     );
     // return RatingBarIndicator.builder(
+  }
+
+   _logout() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('userID');
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+      builder: (context) => Provider(
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Sign in',
+          home: Scaffold(
+            appBar: AppBar(
+              title: Text('bCredible'),
+              backgroundColor: Color.fromRGBO(0, 209, 189, 100)),
+            body: LoginScreen(),
+          ),
+        ),
+      ))
+    );
   }
 
   // Widget _buildFavoriteButton(BuildContext context) {

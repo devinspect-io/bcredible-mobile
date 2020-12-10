@@ -10,6 +10,10 @@ class App extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
+        appBar: AppBar(
+          title: Text('bCredible'),
+          backgroundColor: Color.fromRGBO(0, 209, 189, 100),
+        ),
         body: HomeScreen(),
       )
     );

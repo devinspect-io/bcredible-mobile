@@ -19,18 +19,7 @@ class HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Provider(
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Sign in',
-        home: Scaffold(
-          appBar: AppBar(
-            title: Text('bCredible'),
-            backgroundColor: Color.fromRGBO(0, 209, 189, 100)),
-          body: _buildHomeScreen(),
-        ),
-      ),
-    );
+    return _buildHomeScreen();
     // return ();
   }
 
@@ -121,7 +110,7 @@ class HomeScreenState extends State<HomeScreen> {
                   if (_selectedLocation != 'Please choose a location' &&
                       _selectedLocation != '') {
                     // print('button pressed');
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => ListViewScreen(locationCity: _selectedLocation)),
                     );

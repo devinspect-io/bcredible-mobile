@@ -26,6 +26,7 @@ dependencies:
   rxdart: ^0.24.1
   intl: ^0.16.1
   flutter_svg: ^0.18.0
+  shared_preferences: ^0.4.3
   flutter_rating_bar: ^3.2.0+1
   location: ^3.0.2
   pull_to_refresh: ^1.6.0

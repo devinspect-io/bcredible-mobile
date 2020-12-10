@@ -4,6 +4,7 @@ import '../blocs/login_bloc.dart';
 import 'package:toast/toast.dart';
 import './home_screen.dart';
 import './signup_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatelessWidget {
   Widget build(context) {
@@ -26,9 +27,49 @@ class LoginScreen extends StatelessWidget {
               submitButton(bloc, context),
               _addTopMargin(13),
               signUpText(context),
+              listPageLink(context),
             ],
           ),
         ));
+  }
+
+  Widget listPageLink(context) {
+    return Container(
+        child: Row(
+      children: <Widget>[
+        FlatButton(
+          textColor: Colors.blue,
+          child: Text(
+            'Continue As Guest',
+            style: TextStyle(
+                color: Color.fromRGBO(0, 0, 189, 100),
+                decoration: TextDecoration.underline,
+                fontWeight: FontWeight.w500,
+                fontSize: 14),
+          ),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Provider(
+                      child: MaterialApp(
+                      debugShowCheckedModeBanner: false,
+                        title: 'HomeScreen',
+                        home: Scaffold(
+                            appBar: AppBar(
+                                title: Text('bCredible'),
+                                backgroundColor:
+                                    Color.fromRGBO(0, 209, 189, 100)),
+                            body: HomeScreen()),
+                      ),
+                    )
+              )
+            );
+          },
+        )
+      ],
+      mainAxisAlignment: MainAxisAlignment.center,
+    ));
   }
 
   Widget signUpText(context) {
@@ -47,7 +88,7 @@ class LoginScreen extends StatelessWidget {
                 fontSize: 14),
           ),
           onPressed: () {
-            Navigator.push(
+            Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                     builder: (context) => Provider(
@@ -153,11 +194,26 @@ class LoginScreen extends StatelessWidget {
                       onPressed: () async {
                         if (snapshot.hasData) {
                           final result = await bloc.submit();
-                          if (result) {
-                            Navigator.push(
+                          if (result != null) {
+                            print("result IDD");
+                            print(result);
+                            _save(result);
+                            Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => HomeScreen()));
+                                  builder: (context) => Provider(
+                                        child: MaterialApp(
+                                        debugShowCheckedModeBanner: false,
+                                          title: 'HomeScreen',
+                                          home: Scaffold(
+                                              appBar: AppBar(
+                                                  title: Text('bCredible'),
+                                                  backgroundColor:
+                                                      Color.fromRGBO(0, 209, 189, 100)),
+                                              body: HomeScreen()),
+                                        ),
+                                      )
+                              ));
                           } else {
                             Toast.show("incorrect Email/Password", context,
                                 duration: Toast.LENGTH_SHORT,
@@ -181,6 +237,13 @@ class LoginScreen extends StatelessWidget {
             ),
           ]),
     );
+  }
+
+  _save(String val) async {
+    final prefs = await SharedPreferences.getInstance();
+    final key = 'userID';
+    prefs.setString(key, val);
+    print('saved userID $val');
   }
 
   Container _addTopMargin(double x) {
